@@ -1,0 +1,59 @@
+<div class="panel panel-default">
+<table class="table       
+              table-striped 
+              table-condensed">
+  <caption><h3> Addresses </h3></caption>
+  <thead>
+    <tr>
+      <th>Label</th>
+      <th>Address</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="ad in infoPage.addresspage">  
+      <td>
+            <span ng-hide="ad.editorEnabled">
+              <span ng-hide="ad.label"
+                   ng-click="ad.editorEnabled=!ad.editorEnabled"
+                   class="disabled">
+                   write a label
+              </span>
+              <span ng-show="ad.label"
+                   ng-click="ad.editorEnabled=!ad.editorEnabled">
+                   {{ad.label}}
+              </span>
+            </span>
+            <span ng-show="ad.editorEnabled"
+                 ng-enter="submitLabel(ad)">
+              <input ng-model="ad.label" 
+                     type="text"  
+                     placeholder="write a label">
+              </input>
+            </span>  
+      </td>
+      <td>
+             {{ad.address}} 
+      </td> 
+      <td>
+          <!-- <button class="btn" ng-click="open()">Open Modal</button> -->
+
+
+          <!-- <qrcode data={{ad.address|addrForQR}}></qrcode> -->
+      </td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div>
+    <pagination total-items="totalItems"
+                ng-change="getAddressesList(name)" 
+                ng-model="currentPage" 
+                max-size="maxSize" 
+                class="pagination-sm" 
+                boundary-links="true" 
+                rotate="false"
+                items-per-page="elemxpage" 
+                num-pages="numPages">
+    </pagination>
+</div>

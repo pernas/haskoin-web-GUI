@@ -1,0 +1,39 @@
+<h3> New Payment</h3>
+<form role="form"
+      name="sendForm" 
+      ng-submit="submitNewPayment()">
+
+    <div class="form-group">
+      <label for="recipient"> Recipient: </label>
+      <input id="recipient"
+             class="form-control" 
+             type="text" 
+             ng-model="r" 
+             required ></input>
+    </div>
+
+    <div class="form-group">
+      <label for="amount"> Satoshi amount: </label>
+      <input id="amount"
+             class="form-control" 
+             type="number" 
+             ng-model="a" 
+             required ></input>
+    </div>
+
+    <div class="form-group">
+      <button type="submit"
+              class="btn btn-default" 
+              ng-disabled="sendForm.$invalid">
+              Send Payment
+      </button>
+    </div>
+
+</form>
+
+<div>
+  <alert ng-repeat="alert in alerts" 
+         type="{{alert.type}}" 
+         close="closeAlert($index)">{{alert.msg}}
+  </alert>
+</div>

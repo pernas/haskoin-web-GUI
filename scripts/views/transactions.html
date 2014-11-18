@@ -1,0 +1,4 @@
+<h3> Transactions </h3>
+<ul>
+    <li ng-repeat="tx in transactionsList"> {{tx.value | currency: "Sat ":0}} :: {{tx.txid}} </li>
+</ul>

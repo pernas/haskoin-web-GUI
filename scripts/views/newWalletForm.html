@@ -1,0 +1,49 @@
+<h3> New / Restore Wallet</h3>
+<form role="form"
+      name="newWalletForm" 
+      ng-submit="submitNewWallet()">
+
+    <div class="form-group">
+      <label for="walletname">Wallet name: </label>
+      <input id="walletname"
+             class="form-control" 
+             type="text" 
+             ng-model="wallet.walletname" 
+             required ></input>
+    </div>
+    
+    <div class="form-group">
+      <label for="passphrase">Passphrase: </label>
+      <input id="passphrase"
+             type="password"
+             class="form-control" 
+             type="text" 
+             ng-model="wallet.passphrase" 
+             ></input>
+    </div>
+
+    <div class="form-group">
+      <label for="mnemonic">Mnemonic (restore): </label>
+      <input id="mnemonic"
+             class="form-control" 
+             type="text" 
+             ng-model="wallet.mnemonic" 
+             ></input>
+    </div>
+
+    <div class="form-group">
+      <button type="submit"
+              class="btn btn-default" 
+              ng-disabled="newWalletForm.$invalid">
+              New Wallet
+      </button>
+    </div>
+
+</form>
+
+<div>
+  <alert ng-repeat="alert in alerts" 
+         type="{{alert.type}}" 
+         close="closeAlert($index)">{{alert.msg}}
+  </alert>
+</div>

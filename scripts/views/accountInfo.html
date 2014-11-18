@@ -1,0 +1,51 @@
+<div class="panel panel-default">
+<table class="table table-condensed">
+  <caption><h3> Information </h3></caption>
+    <tbody>
+     <tr>
+      <td ng-switch="account.type">
+            <ul class="list-unstyled"
+                ng-switch-when="regular">
+                <li>Type: {{account.type}}</li>
+                <li>Name: {{account.name}}</li>
+                <li>Wallet: {{account.wallet}}</li>
+                <li>Key: {{account.key}}</li>
+                <li>Balance: {{balance.balance | currency: "Satoshi "}}</li>
+            </ul>
+            <ul class="list-unstyled"
+                ng-switch-when="multisig">
+                <li>Type: {{account.type}}</li>
+                <li>Required: {{account.required}} / {{account.total}} keys</li>
+                <li>Name: {{account.name}}</li>
+                <li>Wallet: {{account.wallet}}</li>
+                <li>Keys:
+                    <ul>
+                        <li ng-repeat="k in account.keys">{{k}}</li>
+                    </ul>
+                </li>
+                <li>Balance: {{balance.balance | currency: "Satoshi "}}</li>
+            </ul>
+            <ul class="list-unstyled"
+                ng-switch-when="read">
+                <li>Type: {{account.type}}</li>
+                <li>Name: {{account.name}}</li>
+                <li>Key: {{account.key}}</li>
+                <li>Balance: {{balance.balance | currency: "Satoshi "}}</li>
+            </ul>
+            <ul class="list-unstyled"
+                ng-switch-when="readmultisig">
+                <li>Type: {{account.type}}</li>
+                <li>Required: {{account.required}} / {{account.total}} keys</li>
+                <li>Name: {{account.name}}</li>
+                <li>Keys:
+                    <ul class="list-unstyled">
+                        <li ng-repeat="k in account.keys">{{k}}</li>
+                    </ul>
+                </li>
+                <li>Balance: {{balance.balance | currency: "Satoshi "}}</li>
+            </ul>
+      </td>
+     </tr>
+    </tbody>
+</table>
+</div>
