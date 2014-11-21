@@ -7,40 +7,46 @@
     <tr>
       <th>Label</th>
       <th>Address</th>
+      <th>Balance</th>
     </tr>
   </thead>
   <tbody>
-    <tr ng-repeat="ad in infoPage.addresspage">  
-      <td>
-            <span ng-hide="ad.editorEnabled">
-              <span ng-hide="ad.label"
-                   ng-click="ad.editorEnabled=!ad.editorEnabled"
-                   class="disabled">
-                   write a label
-              </span>
-              <span ng-show="ad.label"
-                   ng-click="ad.editorEnabled=!ad.editorEnabled">
-                   {{ad.label}}
-              </span>
-            </span>
-            <span ng-show="ad.editorEnabled"
-                 ng-enter="submitLabel(ad)">
-              <input ng-model="ad.label" 
-                     type="text"  
-                     placeholder="write a label">
-              </input>
-            </span>  
-      </td>
-      <td>
-             {{ad.address}} 
-      </td> 
-      <td>
-          <!-- <button class="btn" ng-click="open()">Open Modal</button> -->
 
 
-          <!-- <qrcode data={{ad.address|addrForQR}}></qrcode> -->
-      </td>
-    </tr>
+            <tr ng-repeat="ad in infoPage.addresspage">  
+              <td>
+                    <span ng-hide="ad.editorEnabled">
+                      <span ng-hide="ad.label"
+                           ng-click="ad.editorEnabled=!ad.editorEnabled"
+                           class="disabled">
+                           write a label
+                      </span>
+                      <span ng-show="ad.label"
+                           ng-click="ad.editorEnabled=!ad.editorEnabled">
+                           {{ad.label}}
+                      </span>
+                    </span>
+                    <span ng-show="ad.editorEnabled"
+                         ng-enter="submitLabel(ad)">
+                      <input ng-model="ad.label" 
+                             type="text"  
+                             placeholder="write a label">
+                      </input>
+                    </span>  
+              </td>
+              <td>
+                    <accordion close-others="true">
+                    <accordion-group heading={{ad.address}}>
+                      <qrcode size="100" data={{ad.address|addrForQR}}></qrcode>
+                    </accordion-group>
+                    </accordion>
+                  
+              </td> 
+              <td>0.0
+              <!-- <button popover-placement="top" popover="On the Top!" class="btn btn-default">Top</button> -->
+              </td>
+            </tr>
+
   </tbody>
 </table>
 </div>

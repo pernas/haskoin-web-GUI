@@ -7,13 +7,40 @@ angular.module('HaskoinApp', ['monospaced.qrcode','ngResource','ui.bootstrap','n
             function (successResult) {self.selectedAccount = self.accounts[0];}
         );
 
-        self.clickToOpen = function () {
-            ngDialog.open({
-                template: '<p>my template</p>',
-                plain: true,
-                className: 'ngdialog-theme-default'
-            });
+        self.showModal = false;
+
+        self.open = function() {
+          self.showModal = true;
         };
+
+        self.ok = function() {
+          self.showModal = false;
+        };
+
+        self.cancel = function() {
+          self.showModal = false;
+        };
+        // self.clickToOpen = function () {
+        //         ngDialog.open({
+        //             template: 'static/scripts/views/modals/address.html'
+        //         });
+        // };
+        // self.clickToOpen = function () {
+        //     ngDialog.open({
+        //         template: '<p>my template</p>',
+        //         plain: true,
+        //         className: 'ngdialog-theme-default'
+        //     });
+        // };
+
+        // self.clickToOpen = function () {
+        //         ngDialog.open({ template: 'firstDialogId', 
+        //                         className: 'ngdialog-theme-plain',
+        //                         data: {foo: 'some data'} });
+        // };
+
+
+
     }])
     ////////////////////////////////////////////////////////////////////////////
     // SERVICES
