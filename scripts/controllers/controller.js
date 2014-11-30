@@ -55,23 +55,15 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                 transPage:    $resource('/accounts/:name/acctxs', 
                                         { name:'@name'}
                               ),    
-                addresses:    $resource('/accounts/:name/addrs', 
-                                        { name:'@name'}, 
-                                        { get: {isArray: true}}
+                addresses:    $resource('/wallets/:wname/accounts/:aname/addrs', 
+                                        { wname:'@wname', aname:'@aname'}
                               ),
-                address:      $resource('/accounts/:name/addrs/:key', 
-                                        { name:'@name', key:'@key'},
+                address:      $resource('/wallets/:wname/accounts/:aname/addrs/:key', 
+                                        { wname:'@wname', aname:'@aname', key:'@key'},
                                         { update: {method: 'PUT'}}
                               ),
-                addrPage :    $resource('/accounts/:name/addrs', 
-                                        { name:'@name'}
-                              ),
-                wallets:      $resource('/wallets/:name', 
-                                        { name:'@name'}, 
-                                        { update: {method: 'PUT'}}
-                              ),
-                send:         $resource('/accounts/:name/acctxs', 
-                                        { name:'@name'}
+                send:         $resource('/wallets/:wname/accounts/:aname/txs', 
+                                        { wname:'@wname', aname:'@aname'}
                               ),    
             };
     }])
@@ -164,11 +156,12 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                 $scope.elemxpage   = 10;
                 $scope.currentPage = 1;   
 
-                $scope.getAddressesList = function(accName) {
-                    if (accName != "") {
-                        $scope.infoPage = APIService.addrPage.get(
+                $scope.getAddressesList = function(wallName,accName) {
+                    if (accName !== "") {
+                        $scope.infoPage = APIService.addresses.get(
                             {
-                                 name:        accName
+                                 wname:        wallName
+                                ,aname:        accName
                                 ,page:        $scope.currentPage
                                 ,elemperpage: $scope.elemxpage
                             },
@@ -185,24 +178,26 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                 };
 
                 $scope.submitLabel = function (addr) {
-                    addr.editorEnabled =! addr.editorEnabled;
+                    addr.editorEnabled = !addr.editorEnabled;
                     var x    = {};
                     x.label  = addr.label; 
                     var newlabel = new APIService.address(x);
                     newlabel.$update(
                         {
-                             name: $scope.name
-                            ,key:  addr.index
+                             wname: $scope.wname
+                            ,aname: $scope.aname
+                            ,key:   addr.index
                         }
                     );
                 };
 
-                $scope.$watch('name', function(newAcc, oldAcc) {
-                    $scope.getAddressesList(newAcc);
+                $scope.$watch('aname', function(newAcc, oldAcc) {
+                    $scope.getAddressesList($scope.wname, newAcc);
                 });
             }],
             scope: {
-                name: '@'
+                 wname: '@'
+                ,aname: '@'
             }
         };
     }])
@@ -260,7 +255,8 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                 
                 $scope.submitNewAccount = function () {
                     var newaccount = new APIService.accounts($scope.account);
-                    newaccount.$save(function (successResult) {
+                    newaccount.$save({wname:$scope.targetWallet},
+                                    function (successResult) {
                                         $scope.alerts = [];
                                         $scope.addAlert('success',newaccount);
                                     },
@@ -299,11 +295,12 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                 $scope.payment.type = "send";
                 $scope.payment.recipients = [];
                 $scope.payment.fee = 10000;
+                $scope.payment.minconf = 1;
      
                 $scope.submitNewPayment = function () {
                     $scope.payment.recipients.push([$scope.r,$scope.a]);
                     var newpayment = new APIService.send($scope.payment);
-                    newpayment.$save({name:$scope.name},
+                    newpayment.$save({aname:$scope.aname, wname:$scope.wname},
                                     function (successResult) {
                                         $scope.alerts = [];
                                         $scope.addAlert('success',newpayment);
@@ -317,7 +314,8 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                 };
             }],
             scope: {
-                name: '@'
+                wname: '@',
+                aname: '@'
             }
         };
     }]);

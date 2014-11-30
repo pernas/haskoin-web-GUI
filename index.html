@@ -58,24 +58,40 @@
                  aname="{{wctrl.selectedAccount.name}}">
         </account>
 
-<!-- 
-        <tabset justified="true">
+
+        <tabset justified="true" type="pills">
             <tab heading="Wallet Management">
-                <new-wallet-form></new-wallet-form> 
-                <hr/>
-                <new-account-form></new-account-form>
+                 <tabset justified="true">
+                    <tab heading="New wallet">
+                        <new-wallet-form></new-wallet-form>
+                    </tab>
+                    <tab heading="New account">
+                        <new-account-form></new-account-form>
+                    </tab>
+                    <tab heading="Add keys" disabled="true">
+                    </tab>
+                 </tabset>
+            
             </tab>
             <tab heading="Send">
-                <send-form name="{{wctrl.selectedAccount.name}}"></send-form>
+                <send-form wname="{{wctrl.selectedWallet.name}}"
+                           aname="{{wctrl.selectedAccount.name}}">
+                </send-form>
             </tab>
             <tab heading="Receive">
-                <addresses name="{{wctrl.selectedAccount.name}}"></addresses>
+                <addresses wname="{{wctrl.selectedWallet.name}}"
+                           aname="{{wctrl.selectedAccount.name}}">
+                </addresses>
             </tab>
             <tab heading="Transactions">
-                <transactions name="{{wctrl.selectedAccount.name}}"></transactions>
+<!-- 
+                <transactions wname="{{wctrl.selectedWallet.name}}"
+                              aname="{{wctrl.selectedAccount.name}}">
+                </transactions>   
+ -->
             </tab>
         </tabset>
- -->        
+     
     </div>
 
 

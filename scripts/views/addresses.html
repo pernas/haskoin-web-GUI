@@ -15,35 +15,39 @@
 
             <tr ng-repeat="ad in infoPage.addresspage">  
               <td>
-                    <span ng-hide="ad.editorEnabled">
-                      <span ng-hide="ad.label"
-                           ng-click="ad.editorEnabled=!ad.editorEnabled"
-                           class="disabled">
-                           write a label
+                    <span ng-hide="ad.address.editorEnabled">
+                      <span ng-hide  ="ad.address.label"
+                            ng-click ="ad.address.editorEnabled=!ad.address.editorEnabled"
+                            class    ="disabled">
+                            write a label
                       </span>
-                      <span ng-show="ad.label"
-                           ng-click="ad.editorEnabled=!ad.editorEnabled">
-                           {{ad.label}}
+                      <span ng-show="ad.address.label"
+                            ng-click="ad.address.editorEnabled=!ad.address.editorEnabled">
+                            {{ad.address.label}}
                       </span>
                     </span>
-                    <span ng-show="ad.editorEnabled"
-                         ng-enter="submitLabel(ad)">
-                      <input ng-model="ad.label" 
+                    <span ng-show="ad.address.editorEnabled"
+                          ng-enter="submitLabel(ad.address)">
+                      <input ng-model="ad.address.label" 
                              type="text"  
                              placeholder="write a label">
                       </input>
                     </span>  
               </td>
               <td>
-                    <accordion close-others="true">
-                    <accordion-group heading={{ad.address}}>
-                      <qrcode size="100" data={{ad.address|addrForQR}}></qrcode>
-                    </accordion-group>
-                    </accordion>
-                  
+                    <span ng-click="isCollapsed = !isCollapsed">
+                            {{ad.address.address}}
+                    </span>
+                    <div collapse="!isCollapsed">
+                      <!-- <div class="well well-lg"> -->
+                        <qrcode data = {{ad.address.address|addrForQR}}
+                                size = "100">
+                        </qrcode>
+                      <!-- </div>  -->
+                    </div>
               </td> 
-              <td>0.0
-              <!-- <button popover-placement="top" popover="On the Top!" class="btn btn-default">Top</button> -->
+              <td>
+                {{ad.finalbalance.balance | currency: "S ":0}}
               </td>
             </tr>
 
@@ -53,7 +57,7 @@
 
 <div>
     <pagination total-items="totalItems"
-                ng-change="getAddressesList(name)" 
+                ng-change="getAddressesList(wname,aname)" 
                 ng-model="currentPage" 
                 max-size="maxSize" 
                 class="pagination-sm" 

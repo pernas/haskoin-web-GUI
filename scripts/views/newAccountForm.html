@@ -1,4 +1,3 @@
-<h3> New Account </h3>
 <form role="form"
       name="newAccountForm" 
       ng-submit="submitNewAccount()">
@@ -6,10 +5,20 @@
     <div class="form-group">    
       <label for="accounttype"> Account type: </label>
       <select id         = "accounttype"
-              class      ="form-control" 
+              class      = "form-control" 
               ng-model   = "account.type"
               ng-change  = "cleanForm(account.type,account.accountname)"
               ng-options = "t for t in accountTypes" >
+      </select>
+    </div>
+    
+    <div class="form-group">        
+      <label for="parentwallet"> Parent Wallet: </label>
+      <select id         = "parentwallet"
+              class      = "form-control" 
+              ng-model   = "targetWallet"
+              ng-options = "w.name as w.name for w in wallets" 
+              required>
       </select>
     </div>
 
@@ -25,15 +34,6 @@
                  type="text" 
                  ng-model="account.accountname" 
                  required ></input>
-          </div>
-          <div class="form-group">        
-          <label for="parentwallet"> Parent Wallet: </label>
-          <select id         = "parentwallet"
-                  class="form-control" 
-                  ng-model   = "account.walletname"
-                  ng-options = "w.name as w.name for w in wallets" 
-                  required>
-          </select>
           </div>
 
           <div class="form-group">
@@ -55,14 +55,6 @@
                  type="text" 
                  ng-model="account.accountname" 
                  required ></input>
-          </div>
-          <div class="form-group"> 
-          <label for="parentwallet"> Parent Wallet: </label>
-          <select id         = "parentwallet"
-                  class="form-control" 
-                  ng-model   = "account.walletname"
-                  ng-options = "w.name as w.name for w in wallets"
-                  required></select>
           </div>
           <div class="form-group">
           <label for="requiredkeys"> Required keys: </label>
