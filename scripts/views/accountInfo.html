@@ -1,9 +1,10 @@
-<div class="panel panel-default">
-<table class="table table-condensed">
-  <caption><h3> Information </h3></caption>
-    <tbody>
-     <tr>
-      <td ng-switch="account.type">
+<div>
+  <div>
+    <h3 class="text-muted" ng-click="isColl = !isColl"> 
+    Account Information
+    </h3>
+  </div>
+      <div collapse="!isColl" ng-switch="account.type">
             <ul class="list-unstyled"
                 ng-switch-when="regular">
                 <li>Type: {{account.type}}</li>
@@ -44,8 +45,5 @@
                 </li>
                 <li>Balance: {{balance.balance.balance | currency: "S ":0}}</li>
             </ul>
-      </td>
-     </tr>
-    </tbody>
-</table>
+      </div>
 </div>

@@ -48,13 +48,6 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                 accBalance:   $resource('/wallets/:wname/accounts/:aname/balance', 
                                         { wname:'@wname', aname:'@aname'}
                               ),
-                transactions: $resource('/accounts/:name/acctxs', 
-                                        { name:'@name'}, 
-                                        { get: {isArray: true}}
-                              ),
-                transPage:    $resource('/accounts/:name/acctxs', 
-                                        { name:'@name'}
-                              ),    
                 addresses:    $resource('/wallets/:wname/accounts/:aname/addrs', 
                                         { wname:'@wname', aname:'@aname'}
                               ),
@@ -62,7 +55,7 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                                         { wname:'@wname', aname:'@aname', key:'@key'},
                                         { update: {method: 'PUT'}}
                               ),
-                send:         $resource('/wallets/:wname/accounts/:aname/txs', 
+                transactions: $resource('/wallets/:wname/accounts/:aname/txs', 
                                         { wname:'@wname', aname:'@aname'}
                               ),    
             };
@@ -131,17 +124,38 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
             templateUrl: "scripts/views/transactions.html",
             restrict: 'E',
             controller: ['$scope','APIService', function($scope,APIService){
-                $scope.getTransactionsList = function(accName) {
-                    if (accName != "") {
-                        $scope.transactionsList = APIService.transactions.get({name:accName});
+
+                $scope.maxSize     = 5;   // pagination bar buttons
+                $scope.elemxpage   = 10;
+                $scope.currentPage = 1;   
+
+                $scope.getTransactionsList = function(wallName,accName) {
+                    if (accName !== "") {
+                        $scope.infoPage = APIService.transactions.get(
+                            {
+                                 wname:        wallName
+                                ,aname:        accName
+                                ,page:        $scope.currentPage
+                                ,elemperpage: $scope.elemxpage
+                            },
+                            function (successResult) {
+                                $scope.totalItems = $scope.elemxpage * 
+                                                    $scope.infoPage.maxpage;
+                            },
+                            function (errorResult) {
+                                // $scope.alerts = [];
+                                // $scope.addAlert('danger',errorResult.data.errors);
+                            }
+                        );
                     };
                 };
-                $scope.$watch('name', function(newAcc, oldAcc) {
-                    $scope.getTransactionsList(newAcc);
+                $scope.$watch('aname', function(newAcc, oldAcc) {
+                    $scope.getTransactionsList($scope.wname, newAcc);
                 });
             }],
             scope: {
-                name: '@'
+                 wname: '@'
+                ,aname: '@'
             }
         };
     }])
@@ -154,7 +168,8 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                 
                 $scope.maxSize     = 5;   // pagination bar buttons
                 $scope.elemxpage   = 10;
-                $scope.currentPage = 1;   
+                $scope.currentPage = 1;  
+                //$scope.internal    = true; 
 
                 $scope.getAddressesList = function(wallName,accName) {
                     if (accName !== "") {
@@ -164,6 +179,7 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                                 ,aname:        accName
                                 ,page:        $scope.currentPage
                                 ,elemperpage: $scope.elemxpage
+                                ,internal:    $scope.internal
                             },
                             function (successResult) {
                                 $scope.totalItems = $scope.elemxpage * 
@@ -187,6 +203,7 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                              wname: $scope.wname
                             ,aname: $scope.aname
                             ,key:   addr.index
+                            ,internal: $scope.internal
                         }
                     );
                 };
@@ -196,8 +213,9 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                 });
             }],
             scope: {
-                 wname: '@'
-                ,aname: '@'
+                 wname:    '@'
+                ,aname:    '@'
+                ,internal: '@'
             }
         };
     }])
@@ -299,7 +317,7 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
      
                 $scope.submitNewPayment = function () {
                     $scope.payment.recipients.push([$scope.r,$scope.a]);
-                    var newpayment = new APIService.send($scope.payment);
+                    var newpayment = new APIService.transactions($scope.payment);
                     newpayment.$save({aname:$scope.aname, wname:$scope.wname},
                                     function (successResult) {
                                         $scope.alerts = [];

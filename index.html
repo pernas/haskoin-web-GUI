@@ -20,7 +20,7 @@
                  style="margin:0px auto;display:block"
                  src="/static/images/haskoin.png">
         </div>
-
+<!-- 
         <div class="panel panel-default">
         <table class="table table-condensed">
           <caption><h2> Wallet </h2></caption>
@@ -37,7 +37,8 @@
             </tbody>
         </table>
         </div>
-
+ -->
+<!--  
         <div class="panel panel-default">
         <table class="table table-condensed">
           <caption><h2> Account </h2></caption>
@@ -53,11 +54,44 @@
             </tbody>
         </table>
         </div>
+ -->
+
+         <form class="form-inline" role="form">
+          <div class="form-group">
+            <div class="input-group">
+              <label class="text-muted" for="selectWall">
+                Wallet
+              </label>
+                 <select id         = "selectWall" 
+                         ng-model   = "wctrl.selectedWallet"
+                         class      = "form-control"
+                         ng-change  = "wctrl.updateAccountList(wctrl.selectedWallet)"
+                         ng-options = "w.name for w in wctrl.wallets" >
+                </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group">
+              <label class="text-muted" for="selectAcc">
+                Account
+              </label>
+                <select id         = "selectAcc"
+                        ng-model   = "wctrl.selectedAccount"
+                        class      = "form-control"
+                        ng-options = "a.name group by a.wallet for a in wctrl.accounts" >
+                </select>
+            </div>
+          </div>
+        </form>
+
+
+
+
 
         <account wname="{{wctrl.selectedWallet.name}}"
                  aname="{{wctrl.selectedAccount.name}}">
         </account>
-
+        <hr>
 
         <tabset justified="true" type="pills">
             <tab heading="Wallet Management">
@@ -79,16 +113,28 @@
                 </send-form>
             </tab>
             <tab heading="Receive">
-                <addresses wname="{{wctrl.selectedWallet.name}}"
-                           aname="{{wctrl.selectedAccount.name}}">
-                </addresses>
+                 <tabset justified="true">
+                    <tab heading="External">
+                        <addresses wname="{{wctrl.selectedWallet.name}}"
+                                   aname="{{wctrl.selectedAccount.name}}"
+                                   internal=false>
+                        </addresses>
+                    </tab>
+                    <tab heading="Internal">
+                        <addresses wname="{{wctrl.selectedWallet.name}}"
+                                   aname="{{wctrl.selectedAccount.name}}"
+                                   internal=true>
+                        </addresses>
+                    </tab>
+                 </tabset>
             </tab>
             <tab heading="Transactions">
-<!-- 
+
                 <transactions wname="{{wctrl.selectedWallet.name}}"
-                              aname="{{wctrl.selectedAccount.name}}">
+                              aname="{{wctrl.selectedAccount.name}}"
+                              >
                 </transactions>   
- -->
+
             </tab>
         </tabset>
      
