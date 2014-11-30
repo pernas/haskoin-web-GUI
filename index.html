@@ -23,13 +23,29 @@
 
         <div class="panel panel-default">
         <table class="table table-condensed">
+          <caption><h2> Wallet </h2></caption>
+            <tbody>
+             <tr>
+              <td>
+                <select ng-model   = "wctrl.selectedWallet"
+                        class="form-control"
+                        ng-change  = "wctrl.updateAccountList(wctrl.selectedWallet)"
+                        ng-options = "w.name for w in wctrl.wallets" >
+                </select>
+              </td>
+             </tr>
+            </tbody>
+        </table>
+        </div>
+
+        <div class="panel panel-default">
+        <table class="table table-condensed">
           <caption><h2> Account </h2></caption>
             <tbody>
              <tr>
               <td>
                 <select ng-model   = "wctrl.selectedAccount"
                         class="form-control"
-                        ng-change  = "wctrl.updateAccountInfo(wctrl.selectedAccount)"
                         ng-options = "a.name group by a.wallet for a in wctrl.accounts" >
                 </select>
               </td>
@@ -38,10 +54,11 @@
         </table>
         </div>
 
-        <account name="{{wctrl.selectedAccount.name}}"></account>
+        <account wname="{{wctrl.selectedWallet.name}}"
+                 aname="{{wctrl.selectedAccount.name}}">
+        </account>
 
-        <!-- <qr-address addr="wctrl.selectedAccount.name"></qr-address> -->
-
+<!-- 
         <tabset justified="true">
             <tab heading="Wallet Management">
                 <new-wallet-form></new-wallet-form> 
@@ -58,7 +75,11 @@
                 <transactions name="{{wctrl.selectedAccount.name}}"></transactions>
             </tab>
         </tabset>
+ -->        
     </div>
+
+
+
     <div id="footer">
       <div class="container">
         <hr/>

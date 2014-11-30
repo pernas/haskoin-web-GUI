@@ -1,45 +1,32 @@
-angular.module('HaskoinApp', ['monospaced.qrcode','ngResource','ui.bootstrap','ngDialog'])
-
-    .controller('WalletCtrl', ['APIService','ngDialog',
-      function(APIService,ngDialog){
+angular.module('HaskoinApp', ['monospaced.qrcode'
+                             ,'ngResource'
+                             ,'ui.bootstrap'])
+    .controller('WalletCtrl', ['APIService',
+      function(APIService){
         var self = this;
-        self.accounts = APIService.accounts.query(
-            function (successResult) {self.selectedAccount = self.accounts[0];}
+
+        // get initial selection
+        self.wallets = APIService.wallets.query(
+            function (successResult) {
+                self.selectedWallet = self.wallets[0];
+                self.accounts = APIService.accounts.query(
+                    { wname:self.selectedWallet.name } ,
+                    function (successResult) {
+                        self.selectedAccount = self.accounts[0];
+                    }        
+                );
+            }
         );
 
-        self.showModal = false;
-
-        self.open = function() {
-          self.showModal = true;
+        // update the account list when a wallet is selected
+        self.updateAccountList = function (wallet) {
+            self.accounts = APIService.accounts.query(
+                {wname:wallet.name} ,
+                function (successResult) {
+                    self.selectedAccount = self.accounts[0];
+                }        
+            );            
         };
-
-        self.ok = function() {
-          self.showModal = false;
-        };
-
-        self.cancel = function() {
-          self.showModal = false;
-        };
-        // self.clickToOpen = function () {
-        //         ngDialog.open({
-        //             template: 'static/scripts/views/modals/address.html'
-        //         });
-        // };
-        // self.clickToOpen = function () {
-        //     ngDialog.open({
-        //         template: '<p>my template</p>',
-        //         plain: true,
-        //         className: 'ngdialog-theme-default'
-        //     });
-        // };
-
-        // self.clickToOpen = function () {
-        //         ngDialog.open({ template: 'firstDialogId', 
-        //                         className: 'ngdialog-theme-plain',
-        //                         data: {foo: 'some data'} });
-        // };
-
-
 
     }])
     ////////////////////////////////////////////////////////////////////////////
@@ -51,16 +38,41 @@ angular.module('HaskoinApp', ['monospaced.qrcode','ngResource','ui.bootstrap','n
     .factory('APIService', ['$resource', 
         function($resource) {
             return {
-                accounts:     $resource('/api/accounts/:name', { name:'@name'}, { update: {method: 'PUT'} }),
-                accBalance:   $resource('/api/accounts/:name/balance', { name:'@name'}),
-                transactions: $resource('/api/accounts/:name/acctxs', { name:'@name'}, {get: {isArray: true}}),
-                transPage:    $resource('/api/accounts/:name/acctxs', { name:'@name'}),    
-                addresses:    $resource('/api/accounts/:name/addrs', { name:'@name'}, {get: {isArray: true}}),
-                address:      $resource('/api/accounts/:name/addrs/:key', { name:'@name', key:'@key'}, {update: {method: 'PUT'}}),
-                addrPage :    $resource('/api/accounts/:name/addrs', { name:'@name'}),
-
-                wallets:      $resource('/api/wallets/:name', { name:'@name'}, {update: {method: 'PUT'}}),
-                send:         $resource('/api/accounts/:name/acctxs', { name:'@name'}),    
+                wallets:      $resource('/wallets/:wname', 
+                                        { wname:'@wname'}
+                              ),
+                accounts:     $resource('/wallets/:wname/accounts/:aname',
+                                        { wname:'@wname', aname:'@aname'}, 
+                                        { update: {method: 'PUT'} }
+                              ),
+                accBalance:   $resource('/wallets/:wname/accounts/:aname/balance', 
+                                        { wname:'@wname', aname:'@aname'}
+                              ),
+                transactions: $resource('/accounts/:name/acctxs', 
+                                        { name:'@name'}, 
+                                        { get: {isArray: true}}
+                              ),
+                transPage:    $resource('/accounts/:name/acctxs', 
+                                        { name:'@name'}
+                              ),    
+                addresses:    $resource('/accounts/:name/addrs', 
+                                        { name:'@name'}, 
+                                        { get: {isArray: true}}
+                              ),
+                address:      $resource('/accounts/:name/addrs/:key', 
+                                        { name:'@name', key:'@key'},
+                                        { update: {method: 'PUT'}}
+                              ),
+                addrPage :    $resource('/accounts/:name/addrs', 
+                                        { name:'@name'}
+                              ),
+                wallets:      $resource('/wallets/:name', 
+                                        { name:'@name'}, 
+                                        { update: {method: 'PUT'}}
+                              ),
+                send:         $resource('/accounts/:name/acctxs', 
+                                        { name:'@name'}
+                              ),    
             };
     }])
 
@@ -92,21 +104,30 @@ angular.module('HaskoinApp', ['monospaced.qrcode','ngResource','ui.bootstrap','n
 
     .directive('account', [function() {
         return {
-            templateUrl: "static/scripts/views/accountInfo.html",
+            templateUrl: "scripts/views/accountInfo.html",
             restrict: 'E',
             controller: ['$scope','APIService', function($scope,APIService){
                 $scope.getAccountDetails = function(accName) {
-                    if (accName != "") {
-                        $scope.account = APIService.accounts.get({name:accName});
-                        $scope.balance = APIService.accBalance.get({name:accName});
+                    if (accName) {
+                        $scope.account = APIService.accounts.get(
+                            { aname:accName, 
+                              wname:$scope.wname
+                            }
+                        );
+                        $scope.balance = APIService.accBalance.get(
+                            { aname:accName,
+                              wname:$scope.wname
+                            }
+                        );
                     };
                 };
-                $scope.$watch('name', function(newAcc, oldAcc) {
+                $scope.$watch('aname', function(newAcc, oldAcc) {
                     $scope.getAccountDetails(newAcc);
                 });
             }],
             scope: {
-                name: '@'
+                wname: '@',
+                aname: '@'
             }
         };
     }])
@@ -115,7 +136,7 @@ angular.module('HaskoinApp', ['monospaced.qrcode','ngResource','ui.bootstrap','n
 
     .directive('transactions', [function() {
         return {
-            templateUrl: "static/scripts/views/transactions.html",
+            templateUrl: "scripts/views/transactions.html",
             restrict: 'E',
             controller: ['$scope','APIService', function($scope,APIService){
                 $scope.getTransactionsList = function(accName) {
@@ -135,7 +156,7 @@ angular.module('HaskoinApp', ['monospaced.qrcode','ngResource','ui.bootstrap','n
 
     .directive('addresses', [function() {
         return {
-            templateUrl: "static/scripts/views/addresses.html",
+            templateUrl: "scripts/views/addresses.html",
             restrict: 'E',
             controller: ['$scope','APIService', function($scope,APIService){
                 
@@ -188,7 +209,7 @@ angular.module('HaskoinApp', ['monospaced.qrcode','ngResource','ui.bootstrap','n
 
     .directive('newWalletForm', [function() {
         return {
-            templateUrl: "static/scripts/views/newWalletForm.html",
+            templateUrl: "scripts/views/newWalletForm.html",
             restrict: 'E',
             controller: ['$scope','APIService', function($scope,APIService){
                 $scope.alerts = [];
@@ -220,7 +241,7 @@ angular.module('HaskoinApp', ['monospaced.qrcode','ngResource','ui.bootstrap','n
 
     .directive('newAccountForm', [function() {
         return {
-            templateUrl: "static/scripts/views/newAccountForm.html",
+            templateUrl: "scripts/views/newAccountForm.html",
             restrict: 'E',
             controller: ['$scope','APIService', function($scope,APIService){
                 $scope.alerts = [];
@@ -264,7 +285,7 @@ angular.module('HaskoinApp', ['monospaced.qrcode','ngResource','ui.bootstrap','n
 
     .directive('sendForm', [function() {
         return {
-            templateUrl: "static/scripts/views/sendForm.html",
+            templateUrl: "scripts/views/sendForm.html",
             restrict: 'E',
             controller: ['$scope','APIService', function($scope,APIService){
                 $scope.alerts = [];

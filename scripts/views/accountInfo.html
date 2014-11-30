@@ -10,7 +10,7 @@
                 <li>Name: {{account.name}}</li>
                 <li>Wallet: {{account.wallet}}</li>
                 <li>Key: {{account.key}}</li>
-                <li>Balance: {{balance.balance | currency: "Satoshi "}}</li>
+                <li>Balance: {{balance.balance.balance | currency: "S ":0}}</li>
             </ul>
             <ul class="list-unstyled"
                 ng-switch-when="multisig">
@@ -23,14 +23,14 @@
                         <li ng-repeat="k in account.keys">{{k}}</li>
                     </ul>
                 </li>
-                <li>Balance: {{balance.balance | currency: "Satoshi "}}</li>
+                <li>Balance: {{balance.balance.balance | currency: "S ":0}}</li>
             </ul>
             <ul class="list-unstyled"
                 ng-switch-when="read">
                 <li>Type: {{account.type}}</li>
                 <li>Name: {{account.name}}</li>
                 <li>Key: {{account.key}}</li>
-                <li>Balance: {{balance.balance | currency: "Satoshi "}}</li>
+                <li>Balance: {{balance.balance.balance | currency: "S ":0}}</li>
             </ul>
             <ul class="list-unstyled"
                 ng-switch-when="readmultisig">
@@ -42,7 +42,7 @@
                         <li ng-repeat="k in account.keys">{{k}}</li>
                     </ul>
                 </li>
-                <li>Balance: {{balance.balance | currency: "Satoshi "}}</li>
+                <li>Balance: {{balance.balance.balance | currency: "S ":0}}</li>
             </ul>
       </td>
      </tr>
