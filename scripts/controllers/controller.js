@@ -106,9 +106,11 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                         );
                     };
                 };
-                $scope.$watch('aname', function(newAcc, oldAcc) {
-                    $scope.getAccountDetails(newAcc);
-                });
+                $scope.$watchGroup(['aname','wname'], 
+                    function(newValues, oldValues) {
+                        $scope.getAccountDetails(newValues[0]);
+                    }
+                );
             }],
             scope: {
                 wname: '@',
@@ -149,9 +151,11 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                         );
                     };
                 };
-                $scope.$watch('aname', function(newAcc, oldAcc) {
-                    $scope.getTransactionsList($scope.wname, newAcc);
-                });
+                $scope.$watchGroup(['aname','wname'], 
+                    function(newValues, oldValues) {
+                        $scope.getTransactionsList(newValues[1],newValues[0]);
+                    }
+                );
             }],
             scope: {
                  wname: '@'
@@ -207,10 +211,11 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                         }
                     );
                 };
-
-                $scope.$watch('aname', function(newAcc, oldAcc) {
-                    $scope.getAddressesList($scope.wname, newAcc);
-                });
+                $scope.$watchGroup(['aname','wname'], 
+                    function(newValues, oldValues) {
+                        $scope.getAddressesList(newValues[1],newValues[0]);
+                    }
+                );
             }],
             scope: {
                  wname:    '@'
