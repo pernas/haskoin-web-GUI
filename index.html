@@ -84,10 +84,6 @@
           </div>
         </form>
 
-
-
-
-
         <account wname="{{wctrl.selectedWallet.name}}"
                  aname="{{wctrl.selectedAccount.name}}">
         </account>
@@ -102,7 +98,12 @@
                     <tab heading="New account">
                         <new-account-form></new-account-form>
                     </tab>
-                    <tab heading="Add keys" disabled="true">
+                    <tab heading="Add keys"
+                         disabled="!wctrl.canIAddKeys(wctrl.selectedAccount)">
+                        <add-keys-form wname="{{wctrl.selectedWallet.name}}"
+                                       aname="{{wctrl.selectedAccount.name}}"
+                                       ng-hide="!wctrl.canIAddKeys(wctrl.selectedAccount)">
+                        </add-keys-form>
                     </tab>
                  </tabset>
             

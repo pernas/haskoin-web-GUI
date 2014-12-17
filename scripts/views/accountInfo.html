@@ -4,7 +4,7 @@
     Account Information
     </h3>
   </div>
-      <div collapse="!isColl" ng-switch="account.type">
+      <div collapse="isColl" ng-switch="account.type">
             <ul class="list-unstyled"
                 ng-switch-when="regular">
                 <li>Type: {{account.type}}</li>
@@ -19,7 +19,7 @@
                 <li>Required: {{account.required}} / {{account.total}} keys</li>
                 <li>Name: {{account.name}}</li>
                 <li>Wallet: {{account.wallet}}</li>
-                <li>Keys:
+                <li>Public Keys:
                     <ul>
                         <li ng-repeat="k in account.keys">{{k}}</li>
                     </ul>

@@ -29,17 +29,17 @@
         <div ng-switch-when="regular">
           <div class    ="form-group"> 
           <label for    ="accountname"> Account name: </label>
-          <input id="accountname" 
-                 class="form-control" 
-                 type="text" 
-                 ng-model="account.accountname" 
+          <input id       = "accountname" 
+                 class    = "form-control" 
+                 type     = "text" 
+                 ng-model = "account.accountname" 
                  required ></input>
           </div>
 
           <div class="form-group">
-            <button type="submit"
-                    class="btn btn-default" 
-                    ng-disabled="newAccountForm.$invalid">
+            <button type        = "submit"
+                    class       = "btn btn-default" 
+                    ng-disabled = "newAccountForm.$invalid">
                     New Account
             </button>
           </div>
@@ -47,43 +47,56 @@
 
         <!-- MULTISIG ACCOUNT FORM -->
 
-        <div ng-switch-when="multisig"> 
-          <div class="form-group"> 
-          <label for="accountname"> Account name: </label>
-          <input id="accountname"
-                 class="form-control"  
-                 type="text" 
-                 ng-model="account.accountname" 
+        <div ng-switch-when = "multisig"> 
+          <div class = "form-group"> 
+          <label for = "accountname"> Account name: </label>
+          <input id       = "accountname"
+                 class    = "form-control"  
+                 type     = "text" 
+                 ng-model = "account.accountname" 
                  required ></input>
           </div>
-          <div class="form-group">
-          <label for="requiredkeys"> Required keys: </label>
-          <input id="requiredkeys"
-                 class="form-control"  
-                 type="number" 
-                 ng-model="account.required" 
+          <div class = "form-group">
+          <label for = "requiredkeys"> Required keys: </label>
+          <input id       = "requiredkeys"
+                 class    = "form-control"  
+                 type     = "number" 
+                 ng-model = "account.required" 
                  required ></input>
           </div>
           <div class="form-group">
           <label for="totalkeys"> Total keys: </label>
-          <input id="totalkeys"
-                 class="form-control"  
-                 type="number" 
-                 ng-model="account.total" 
+          <input id       = "totalkeys"
+                 class    = "form-control"  
+                 type     = "number" 
+                 ng-model = "account.total" 
                  required ></input>
           </div>
+
+          <!-- Keys loop -->
           <div class="form-group">
-          <label for="keys"> Keys: </label>
-          <input id="keys"
-                 class="form-control"  
-                 type="text" 
-                 ng-model="account.keys"></input>
+            <button type     = "button"
+                    ng-click = "addNewKey()"
+                    ng-disabled = "!account.total || account.keys.length+1 >= account.total" 
+                    class    = "btn btn-default" >
+                    Add another key 
+            </button>
           </div>
+          <div class="form-group" data-ng-repeat="(i,key) in account.keys track by $index">
+            <label ng-show="$first"> Keys </label>
+
+            <input type        = "text"
+                   class       = "form-control" 
+                   ng-model    = "account.keys[i]" 
+                   name        = "" 
+                   placeholder = "Enter a key">
+          </div>
+          <!-- End Keys loop -->
 
           <div class="form-group">
-            <button type="submit"
-                    class="btn btn-default" 
-                    ng-disabled="newAccountForm.$invalid">
+            <button type        = "submit"
+                    class       = "btn btn-default" 
+                    ng-disabled = "newAccountForm.$invalid">
                     New Account
             </button>
           </div>
@@ -94,24 +107,24 @@
         <div ng-switch-when="read">
           <div class="form-group"> 
           <label for="accountname"> Account name: </label>
-          <input id="accountname"
-                 class="form-control"  
-                 type="text" 
-                 ng-model="account.accountname" 
+          <input id       = "accountname"
+                 class    = "form-control"  
+                 type     = "text" 
+                 ng-model = "account.accountname" 
                  required ></input>
           </div>
           <div class="form-group">
           <label for="accountkey"> Account key: </label>
-          <input id="accountkey" 
-                 class="form-control" 
-                 type="text" 
-                 ng-model="account.key" 
+          <input id       = "accountkey" 
+                 class    = "form-control" 
+                 type     = "text" 
+                 ng-model = "account.key" 
                  required ></input>
           </div>
           <div class="form-group">
-            <button type="submit"
-                    class="btn btn-default" 
-                    ng-disabled="newAccountForm.$invalid">
+            <button type        = "submit"
+                    class       = "btn btn-default" 
+                    ng-disabled = "newAccountForm.$invalid">
                     New Account
             </button>
           </div>
@@ -122,40 +135,53 @@
         <div ng-switch-when="readmultisig">
           <div class="form-group"> 
           <label for="accountname"> Account name: </label>
-          <input id="accountname" 
-                 class="form-control" 
-                 type="text" 
-                 ng-model="account.accountname" 
+          <input id       = "accountname" 
+                 class    = "form-control" 
+                 type     = "text" 
+                 ng-model = "account.accountname" 
                  required ></input>
           </div>
           <div class="form-group">
           <label for="requiredkeys"> Required keys: </label>
-          <input id="requiredkeys"
-                 class="form-control"  
-                 type="number" 
-                 ng-model="account.required" 
+          <input id       = "requiredkeys"
+                 class    = "form-control"  
+                 type     = "number" 
+                 ng-model = "account.required" 
                  required ></input>
           </div>
           <div class="form-group">
           <label for="totalkeys"> Total keys: </label>
-          <input id="totalkeys"
-                 class="form-control"  
-                 type="number" 
-                 ng-model="account.total" 
+          <input id       = "totalkeys"
+                 class    = "form-control"  
+                 type     = "number" 
+                 ng-model = "account.total" 
                  required ></input>
           </div>
+
+          <!-- Keys loop -->
           <div class="form-group">
-          <label for="keys"> Keys: </label>
-          <input id="keys"
-                 class="form-control"  
-                 type="text" 
-                 ng-model="account.keys"></input>
+            <button type     = "button"
+                    ng-click = "addNewKey()"
+                    ng-disabled = "!account.total || account.keys.length+1 > account.total" 
+                    class    = "btn btn-default" >
+                    Add another key 
+            </button>
           </div>
+          <div class="form-group" data-ng-repeat="(i,key) in account.keys track by $index">
+            <label ng-show="$first"> Keys </label>
+
+            <input type        = "text"
+                   class       = "form-control" 
+                   ng-model    = "account.keys[i]" 
+                   name        = "" 
+                   placeholder = "Enter a key">
+          </div>
+          <!-- End Keys loop -->
 
           <div class="form-group">
-            <button type="submit"
-                    class="btn btn-default" 
-                    ng-disabled="newAccountForm.$invalid">
+            <button type        = "submit"
+                    class       = "btn btn-default" 
+                    ng-disabled = "newAccountForm.$invalid">
                     New Account
             </button>
           </div>
@@ -165,8 +191,8 @@
 </form>
 
 <div>
-  <alert ng-repeat="alert in alerts" 
-         type="{{alert.type}}" 
-         close="closeAlert($index)">{{alert.msg}}
+  <alert ng-repeat = "alert in alerts" 
+         type      = "{{alert.type}}" 
+         close     = "closeAlert($index)">{{alert.msg}}
   </alert>
 </div>

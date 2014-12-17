@@ -8,10 +8,11 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
         // get initial selection
         self.wallets = APIService.wallets.query(
             function (successResult) {
-                self.selectedWallet = self.wallets[0];
+                var wallet = self.wallets[0];
                 self.accounts = APIService.accounts.query(
-                    { wname:self.selectedWallet.name } ,
+                    { wname:wallet.name } ,
                     function (successResult) {
+                        self.selectedWallet  = self.wallets[0];
                         self.selectedAccount = self.accounts[0];
                     }        
                 );
@@ -20,12 +21,24 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
 
         // update the account list when a wallet is selected
         self.updateAccountList = function (wallet) {
+            self.selectedAccount = {};
             self.accounts = APIService.accounts.query(
                 {wname:wallet.name} ,
                 function (successResult) {
                     self.selectedAccount = self.accounts[0];
                 }        
             );            
+        };
+
+        self.canIAddKeys = function (account) {
+            if (account) {
+              if (account.type === "multisig" || account.type === "readmultisig") {
+                if (account.keys.length < account.total) {
+                    return true;
+                };
+              };
+            };
+            return false;
         };
 
     }])
@@ -44,6 +57,9 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                 accounts:     $resource('/wallets/:wname/accounts/:aname',
                                         { wname:'@wname', aname:'@aname'}, 
                                         { update: {method: 'PUT'} }
+                              ),
+                addKeys:      $resource('/wallets/:wname/accounts/:aname/keys',
+                                        { wname:'@wname', aname:'@aname'}                                   
                               ),
                 accBalance:   $resource('/wallets/:wname/accounts/:aname/balance', 
                                         { wname:'@wname', aname:'@aname'}
@@ -92,23 +108,23 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
             templateUrl: "scripts/views/accountInfo.html",
             restrict: 'E',
             controller: ['$scope','APIService', function($scope,APIService){
-                $scope.getAccountDetails = function(accName) {
+                $scope.getAccountDetails = function(accName, walName) {
                     if (accName) {
                         $scope.account = APIService.accounts.get(
                             { aname:accName, 
-                              wname:$scope.wname
+                              wname:walName
                             }
                         );
                         $scope.balance = APIService.accBalance.get(
                             { aname:accName,
-                              wname:$scope.wname
+                              wname:walName
                             }
                         );
                     };
                 };
                 $scope.$watchGroup(['aname','wname'], 
                     function(newValues, oldValues) {
-                        $scope.getAccountDetails(newValues[0]);
+                        $scope.getAccountDetails(newValues[0],newValues[1]);
                     }
                 );
             }],
@@ -131,7 +147,7 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                 $scope.elemxpage   = 10;
                 $scope.currentPage = 1;   
 
-                $scope.getTransactionsList = function(wallName,accName) {
+                $scope.getTransactionsList = function(accName, wallName) {
                     if (accName !== "") {
                         $scope.infoPage = APIService.transactions.get(
                             {
@@ -153,7 +169,7 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                 };
                 $scope.$watchGroup(['aname','wname'], 
                     function(newValues, oldValues) {
-                        $scope.getTransactionsList(newValues[1],newValues[0]);
+                        $scope.getTransactionsList(newValues[0], newValues[1]);
                     }
                 );
             }],
@@ -262,8 +278,10 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
             templateUrl: "scripts/views/newAccountForm.html",
             restrict: 'E',
             controller: ['$scope','APIService', function($scope,APIService){
+                
                 $scope.alerts = [];
                 $scope.addAlert = function(t,m) {
+                    $scope.alerts = [];
                     $scope.alerts.push({type: t, msg: m});
                 };
                 $scope.closeAlert = function(index) {
@@ -276,7 +294,16 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                 $scope.accountTypes = ["regular","multisig","read","readmultisig"];
                 $scope.wallets = APIService.wallets.query();
                 
+
+
+                $scope.addNewKey = function() {
+                  // var newItemNo = $scope.account.keys.length+1;
+                  $scope.account.keys.push("");          
+                };
+
                 $scope.submitNewAccount = function () {
+                    $scope.account.keys = $scope.account.keys.filter(
+                        function(item, index, array){ return item;});
                     var newaccount = new APIService.accounts($scope.account);
                     newaccount.$save({wname:$scope.targetWallet},
                                     function (successResult) {
@@ -291,6 +318,7 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                 };
 
                 $scope.cleanForm = function (tipus,nom) {
+                    $scope.alerts = [];
                     delete $scope.account;
                     $scope.account = {};
                     $scope.account.keys = [];
@@ -335,6 +363,81 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                                     }
                     );
                 };
+            }],
+            scope: {
+                wname: '@',
+                aname: '@'
+            }
+        };
+    }])
+
+    .directive('addKeysForm', [function() {
+        return {
+            templateUrl: "scripts/views/addkeys.html",
+            restrict: 'E',
+            controller: ['$scope','APIService', function($scope,APIService){
+
+
+                $scope.newKeys = [];
+                $scope.alerts = [];
+                $scope.addAlert = function(t,m) {
+                    $scope.alerts = [];
+                    $scope.alerts.push({type: t, msg: m});
+                };
+                $scope.closeAlert = function(index) {
+                    $scope.alerts.splice(index, 1);
+                };
+
+                // $scope.account = {};
+                // $scope.account.keys = [];
+                // $scope.account.type = "regular";
+                // $scope.account.accountname = "";
+                // $scope.accountTypes = ["regular","multisig","read","readmultisig"];
+                // $scope.wallets = APIService.wallets.query();
+                
+
+
+                $scope.addNewKey = function() {
+                  $scope.newKeys.push("");          
+                };
+
+
+                $scope.submitAddKeys = function () {
+                    $scope.alerts = [];
+                    $scope.newKeys = $scope.newKeys.filter(
+                        function(item, index, array){ return item;});
+
+
+
+                    APIService.addKeys.save({wname:$scope.wname, aname:$scope.aname }, 
+                                    $scope.newKeys,
+                                    function (successResult) {
+                                        $scope.alerts = [];
+                                        $scope.addAlert('success','Keys added correctly');
+                                        $scope.newKeys = [];
+                                        $scope.getAccountDetails($scope.aname, $scope.wname);
+                                    },
+                                    function (errorResult) {
+                                        $scope.alerts = [];
+                                        $scope.addAlert('danger',errorResult.data.errors);
+                                    }
+                    );
+                };
+
+                $scope.getAccountDetails = function(accName,walName) {
+                    if (accName) {
+                        $scope.account = APIService.accounts.get(
+                            { aname:accName, 
+                              wname:walName
+                            }
+                        );
+                    };
+                };
+                $scope.$watchGroup(['aname','wname'], 
+                    function(newValues, oldValues) {
+                        $scope.getAccountDetails(newValues[0],newValues[1]);
+                    }
+                );
             }],
             scope: {
                 wname: '@',
