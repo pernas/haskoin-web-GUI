@@ -20,41 +20,6 @@
                  style="margin:0px auto;display:block"
                  src="/static/images/haskoin.png">
         </div>
-<!-- 
-        <div class="panel panel-default">
-        <table class="table table-condensed">
-          <caption><h2> Wallet </h2></caption>
-            <tbody>
-             <tr>
-              <td>
-                <select ng-model   = "wctrl.selectedWallet"
-                        class="form-control"
-                        ng-change  = "wctrl.updateAccountList(wctrl.selectedWallet)"
-                        ng-options = "w.name for w in wctrl.wallets" >
-                </select>
-              </td>
-             </tr>
-            </tbody>
-        </table>
-        </div>
- -->
-<!--  
-        <div class="panel panel-default">
-        <table class="table table-condensed">
-          <caption><h2> Account </h2></caption>
-            <tbody>
-             <tr>
-              <td>
-                <select ng-model   = "wctrl.selectedAccount"
-                        class="form-control"
-                        ng-options = "a.name group by a.wallet for a in wctrl.accounts" >
-                </select>
-              </td>
-             </tr>
-            </tbody>
-        </table>
-        </div>
- -->
 
          <form class="form-inline" role="form">
           <div class="form-group">
@@ -78,7 +43,7 @@
                 <select id         = "selectAcc"
                         ng-model   = "wctrl.selectedAccount"
                         class      = "form-control"
-                        ng-options = "a.name group by a.wallet for a in wctrl.accounts" >
+                        ng-options = "a.name for a in wctrl.accounts" >
                 </select>
             </div>
           </div>
