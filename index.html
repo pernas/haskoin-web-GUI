@@ -21,101 +21,28 @@
                  src="/static/images/haskoin.png">
         </div>
 
-         <form class="form-inline" role="form">
-          <div class="form-group">
-            <div class="input-group">
-              <label class="text-muted" for="selectWall">
-                Wallet
-              </label>
-                 <select id         = "selectWall" 
-                         ng-model   = "wctrl.selectedWallet"
-                         class      = "form-control"
-                         ng-change  = "wctrl.updateAccountList(wctrl.selectedWallet)"
-                         ng-options = "w.name for w in wctrl.wallets" >
-                </select>
-            </div>
-          </div>
-          <div class="form-group">
-            <div class="input-group">
-              <label class="text-muted" for="selectAcc">
-                Account
-              </label>
-                <select id         = "selectAcc"
-                        ng-model   = "wctrl.selectedAccount"
-                        class      = "form-control"
-                        ng-options = "a.name for a in wctrl.accounts" >
-                </select>
-            </div>
-          </div>
-        </form>
-
-        <account wname="{{wctrl.selectedWallet.name}}"
-                 aname="{{wctrl.selectedAccount.name}}">
-        </account>
-        <hr>
-
-        <tabset justified="true" type="pills">
-            <tab heading="Wallet Management">
-                 <tabset justified="true">
-                    <tab heading="New wallet">
-                        <new-wallet-form></new-wallet-form>
-                    </tab>
-                    <tab heading="New account">
-                        <new-account-form></new-account-form>
-                    </tab>
+        <div ng-view></div>
+<!-- 
                     <tab heading="Add keys"
                          disabled="!wctrl.canIAddKeys(wctrl.selectedAccount)">
                         <add-keys-form wname="{{wctrl.selectedWallet.name}}"
                                        aname="{{wctrl.selectedAccount.name}}"
                                        ng-hide="!wctrl.canIAddKeys(wctrl.selectedAccount)">
                         </add-keys-form>
-                    </tab>
-                 </tabset>
-            
-            </tab>
-            <tab heading="Send">
-                <send-form wname="{{wctrl.selectedWallet.name}}"
-                           aname="{{wctrl.selectedAccount.name}}">
-                </send-form>
-            </tab>
-            <tab heading="Receive">
-                 <tabset justified="true">
-                    <tab heading="External">
-                        <addresses wname="{{wctrl.selectedWallet.name}}"
-                                   aname="{{wctrl.selectedAccount.name}}"
-                                   internal=false>
-                        </addresses>
-                    </tab>
-                    <tab heading="Internal">
-                        <addresses wname="{{wctrl.selectedWallet.name}}"
-                                   aname="{{wctrl.selectedAccount.name}}"
-                                   internal=true>
-                        </addresses>
-                    </tab>
-                 </tabset>
-            </tab>
-            <tab heading="Transactions">
-
-                <transactions wname="{{wctrl.selectedWallet.name}}"
-                              aname="{{wctrl.selectedAccount.name}}"
-                              >
-                </transactions>   
-
-            </tab>
-        </tabset>
-     
+                    </tab> 
+-->
     </div>
-
-
 
     <div id="footer">
       <div class="container">
         <hr/>
-        <p class="muted credit">Haskoin wallet GUI 2014.</p>
+        <p class="muted credit">Haskoin wallet web GUI 2015.</p>
       </div>
     </div>
+
     <!-- ------------------------------------------------------------------- -->
     <script src="/static/node_modules/angular/angular.min.js"></script>
+    <script src="/static/node_modules/angular-route/angular-route.min.js"></script>
     <script src="/static/node_modules/jquery/dist/jquery.min.js"></script>
     <script src="/static/bower_components/qrcode-generator/js/qrcode.js"></script>
     <script src="/static/bower_components/qrcode-generator/js/qrcode_UTF8.js"></script>   
@@ -127,24 +54,3 @@
     <script src="/static/scripts/controllers/controller.js"></script>
     </body>
 </html>
-
-
-<!-- ::: TODO :::
-
-1 formulari per afegir claus a una conta multifirma (un cop creada)
-2 arreglar com es pasa el vector claus al formulari creacio de conta multifirma
-3 Formulario para pedir una direccion nueva con etiqueta (POST /api/accounts/{name}/addrs)
-4 Update a label of an address PUT /api/accounts/{name}/addrs/{key} 
-5 Arreglar paginacion de transacciones GET /api/accounts/{name}/acctxs y direcciones
-6 Enviar pasta, fer el formulari per multiple recipients 
-7 Enviar, fer el formulari per enviar una transaccio parcial
-8 canviar el logo correcte
-9 fer el testing
-10 implementar el detall de tx
-11 address validation (regex) on forms (and key)
-12 escriure un filter per mostrar bitcoin amounts
-13 fer un plugin per consultar la tasa de canvi
-
-
-
---> 

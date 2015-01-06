@@ -1,0 +1,21 @@
+<div class="panel panel-default">
+<table class="table       
+              table-striped 
+              table-condensed">
+  <caption><h3> Wallets </h3></caption>
+  <thead>
+    <tr>
+      <th>Name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="w in wallets">
+      <td>
+        <span> 
+          <a ng-href="#/wallets/{{w.name}}/accounts">{{w.name}}</a>  
+        </span>  
+      </td>
+    </tr>
+  </tbody>
+</table>
+</div>

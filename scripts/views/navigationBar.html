@@ -1,0 +1,45 @@
+<div class="collapse navbar-collapse">
+    <ul class="nav navbar-nav">
+        <!-- <li> <a ng-href="#/">Home</a> </li> -->
+        <li> 
+          <a ng-href="#/new-wallet">
+            New Wallet
+          </a>
+        </li>
+        <li> 
+          <a ng-href="#/new-account">
+            New Account
+          </a>
+        </li>
+        <li> 
+          <a ng-href="#/wallets">
+            Wallets
+          </a>
+        </li>
+        <li ng-show="wallet"> 
+          <a ng-href="#/wallets/{{wallet}}/accounts">
+            Accounts
+          </a> 
+        </li>
+        <li ng-show="account"> 
+          <a ng-href="#/wallets/{{wallet}}/accounts/{{account}}">
+            Details
+          </a> 
+        </li>
+        <li ng-show="account"> 
+          <a ng-href="#/wallets/{{wallet}}/accounts/{{account}}/send">
+            Send
+          </a> 
+        </li>
+        <li ng-show="account"> 
+          <a ng-href="#/wallets/{{wallet}}/accounts/{{account}}/receive">
+            Receive
+          </a> 
+        </li>
+        <li ng-show="account"> 
+          <a ng-href="#/wallets/{{wallet}}/accounts/{{account}}/transactions">
+            Transactions
+          </a> 
+        </li>
+    </ul>
+</div>

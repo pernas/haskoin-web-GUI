@@ -1,37 +1,77 @@
 angular.module('HaskoinApp', ['monospaced.qrcode'
                              ,'ngResource'
-                             ,'ui.bootstrap'])
-    .controller('WalletCtrl', ['$scope','APIService','NotificationService',
-      function($scope,APIService,NotificationService){
+                             ,'ui.bootstrap'
+                             ,'ngRoute'])
+    ////////////////////////////////////////////////////////////////////////////
+    // CONFIG ROUTES
+    ////////////////////////////////////////////////////////////////////////////
+
+    .config(['$routeProvider', 
+      function($routeProvider) {
+
+        $routeProvider
+          .when('/',{
+              template: '<navigation-bar></navigation-bar> <h1> Welcome to Haskoin Wallet </h1>'
+          })
+          .when('/new-wallet',{
+              template: '<navigation-bar></navigation-bar><new-wallet-form></new-wallet-form>'
+          })
+          .when('/new-account',{
+              template: '<navigation-bar></navigation-bar><new-account-form></new-account-form>'
+          })
+          .when('/wallets',{
+              template: '<navigation-bar></navigation-bar><wallets wallets="WLC.wallets"></wallets>',
+              controller: 'WalletListCtrl as WLC',
+              resolve:{
+                walletsPromise: [ 'APIService',
+                    function (APIService) {
+                        var walletsData = APIService.wallets.query();
+                        return walletsData.$promise;
+                    }]
+              }
+          })
+          .when('/wallets/:walletName/accounts',{
+              template: '<navigation-bar></navigation-bar><accounts wallet="{{ALC.wname}}" accounts="ALC.accts"></accounts>',
+              controller: 'AccountListCtrl as ALC',
+              resolve:{
+                accountsPromise: [ 'APIService','$route',
+                    function (APIService, $route) {
+                        var walletName = $route.current.params.walletName;
+                        var accountsData = APIService.accounts.query({wname:walletName});
+                        return accountsData.$promise;
+                    }]
+              }
+          })
+          .when('/wallets/:walletName/accounts/:accountName',{
+              template: '<navigation-bar></navigation-bar><account wname="{{AIC.wname}}" aname="{{AIC.aname}}"></account>',
+              controller: 'AccountInfoCtrl as AIC'
+          })
+          .when('/wallets/:walletName/accounts/:accountName/transactions',{
+              template: '<navigation-bar></navigation-bar><transactions wname="{{TLC.wname}}" aname="{{TLC.aname}}"></transactions>',
+              controller: 'TransactionListCtrl as TLC'
+          })
+          .when('/wallets/:walletName/accounts/:accountName/receive',{
+              template: '<navigation-bar></navigation-bar><tabset justified="true"><tab heading="External"><addresses wname="{{AdLC.wname}}" aname="{{AdLC.aname}}" internal=false></addresses></tab><tab heading="Internal"><addresses wname="{{AdLC.wname}}" aname="{{AdLC.aname}}" internal=true></addresses></tab></tabset>',
+              controller: 'AddressListCtrl as AdLC'
+          })
+          .when('/wallets/:walletName/accounts/:accountName/send',{
+              template: '<navigation-bar></navigation-bar><send-form wname="{{SFC.wname}}" aname="{{SFC.aname}"></send-form>',
+              controller: 'SendFormCtrl as SFC'
+          })
+
+                
+
+          .otherwise({redirectTo: '/'});
+    }])
+    ////////////////////////////////////////////////////////////////////////////
+    // MAIN CONTROLLER
+    ////////////////////////////////////////////////////////////////////////////
+    .controller('WalletCtrl', ['$scope','$location','APIService',
+      function($scope, $location, APIService){
         var self = this;
-        self.selectedWallet = {};
-        self.selectedAccount = {};
-        self.wallets = [];
-        self.accounts = [];
 
-        // get initial selection
-        self.wallets = APIService.wallets.query(
-            function (successResult) {
-                var wallet = self.wallets[0];
-                self.accounts = APIService.accounts.query(
-                    { wname:wallet.name } ,
-                    function (successResult) {
-                        self.selectedWallet  = self.wallets[0];
-                        self.selectedAccount = self.accounts[0];
-                    }        
-                );
-            }
-        );
-
-        // update the account list when a wallet is selected
-        self.updateAccountList = function (wallet) {
-            self.selectedAccount = {};
-            self.accounts = APIService.accounts.query(
-                {wname:wallet.name} ,
-                function (successResult) {
-                    self.selectedAccount = self.accounts[0];
-                }        
-            );            
+        self.isActive = function (viewLocation) { 
+            return viewLocation === $location.path();
         };
 
         self.canIAddKeys = function (account) {
@@ -45,55 +85,49 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
             return false;
         };
 
-        $scope.$watch( function() { return NotificationService.getWalList();},
-                     function(isUpdated) {
-                            if (isUpdated) {
-                                var newlist = APIService.wallets.query(
-                                    function (successResult) {
-                                        self.wallets.push(newlist[newlist.length-1]);
-                                    }
-                                );
-                                NotificationService.setWalList(false); 
-                                 
-                            };                 
-        });
 
+    }])
+    ////////////////////////////////////////////////////////////////////////////
+    // ROUTES CONTROLLERS
+    ////////////////////////////////////////////////////////////////////////////
+    .controller('WalletListCtrl', ['walletsPromise',
+      function(walletsPromise){
+        var self = this;
+        self.wallets = walletsPromise;
+    }])
+    .controller('AccountListCtrl', ['accountsPromise','$routeParams',
+      function(accountsPromise,$routeParams){
+        var self = this;
+        self.wname = $routeParams.walletName;
+        self.accts = accountsPromise;
+    }])
+    .controller('AccountInfoCtrl', ['$routeParams',
+      function($routeParams){
+        var self = this;
+        self.wname = $routeParams.walletName;
+        self.aname = $routeParams.accountName;
+    }])
+    .controller('TransactionListCtrl', ['$routeParams',
+      function($routeParams){
+        var self = this;
+        self.wname = $routeParams.walletName;
+        self.aname = $routeParams.accountName;
+    }])
+    .controller('AddressListCtrl', ['$routeParams',
+      function($routeParams){
+        var self = this;
+        self.wname = $routeParams.walletName;
+        self.aname = $routeParams.accountName;
+    }])
+    .controller('SendFormCtrl', ['$routeParams',
+      function($routeParams){
+        var self = this;
+        self.wname = $routeParams.walletName;
+        self.aname = $routeParams.accountName;
     }])
     ////////////////////////////////////////////////////////////////////////////
     // SERVICES
     ////////////////////////////////////////////////////////////////////////////
-    .factory('NotificationService', [ 
-        function() {
-            var accInfo  = false;
-            var walList = false;
-            var accList = false;
-            return {
-                getAccInfo: function() {return accInfo;},
-                setAccInfo: function(boolVar) {accInfo = boolVar;},
-                getWalList: function() {return walList;},
-                setWalList: function(boolVar) {walList = boolVar;},
-                getAccList: function() {return accList;},
-                setAccList: function(boolVar) {accList = boolVar;}
-            };
-    }])
-    // .factory('WalletStateService', [ 
-    //     function() {
-    //         var selectedWal = {};
-    //         var selectedAcc = {};
-    //         var walletList  = [];
-    //         var accountList = [];
-    //         return {
-    //             getSelWal: function() {return selectedWal;},
-    //             setSelWal: function(wallet) {selectedWal = wallet;},
-    //             getSelAcc: function() {return accList;},
-    //             setSelAcc: function(account) {selectedAcc = account;},
-    //             getWalList: function() {return walletList;},
-    //             setWalList: function(list) {walletList = list;},
-    //             getAccList: function() {return accountList;},
-    //             setAccList: function(list) {accountList = list;}
-    //         };
-    // }])
-
 
     .factory('APIService', ['$resource', 
         function($resource) {
@@ -149,6 +183,40 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
         };
     })
 
+    .directive('wallets', [function() {
+        return {
+            templateUrl: "scripts/views/wallets.html",
+            restrict: 'E',
+            scope: {
+                 wallets: '='
+            }
+        };
+    }])
+
+    .directive('accounts', [function() {
+        return {
+            templateUrl: "scripts/views/accounts.html",
+            restrict: 'E',
+            scope: {
+                 wallet: '@',
+                 accounts: '='
+            }
+        };
+    }])
+
+    .directive('navigationBar', [ function() {
+        return {
+            templateUrl: "scripts/views/navigationBar.html",
+            restrict: 'E',
+            controller: ['$scope', '$routeParams',
+              function($scope,$routeParams){
+                $scope.wallet = $routeParams.walletName;
+                $scope.account = $routeParams.accountName;  
+              }
+            ],
+            scope: {}
+        };
+    }])
 
     .directive('account', [function() {
         return {
@@ -156,8 +224,7 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
             restrict: 'E',
             controller: ['$scope',
                          'APIService',
-                         'NotificationService',
-              function($scope,APIService,NotificationService){
+              function($scope,APIService){
           
                 $scope.getAccountDetails = function(accName, walName) {
                     if (accName) {
@@ -179,16 +246,6 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                     }
                 );
                 //watch for account info updates
-                $scope.$watch( function(){
-                                 return NotificationService.getAccInfo();
-                               },
-                                function(isUpdated) {
-                                    if (isUpdated) {
-                                        $scope.getAccountDetails($scope.aname,$scope.wname);
-                                        NotificationService.setAccInfo(false);    
-                                    };
-                                    
-                               });
             }],
             scope: {
                 wname: '@',
@@ -196,8 +253,6 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
             }
         };
     }])
-
-
 
     .directive('transactions', [function() {
         return {
@@ -307,9 +362,8 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
         return {
             templateUrl: "scripts/views/newWalletForm.html",
             restrict: 'E',
-            controller: ['$scope','APIService','NotificationService', function($scope,APIService,NotificationService){
+            controller: ['$scope','APIService', function($scope,APIService){
                 
-
                 $scope.alerts = [];
                 $scope.addAlert = function(t,m) {
                     $scope.alerts.push({type: t, msg: m});
@@ -325,7 +379,6 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                     newwallet.$save(function (successResult) {
                                         $scope.alerts = [];
                                         $scope.addAlert('success','Mnemonic: ' + newwallet.mnemonic);
-                                        NotificationService.setWalList(true);
                                     },
                                     function (errorResult) {
                                         $scope.alerts = [];
@@ -357,15 +410,10 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                 $scope.account.type = "regular";
                 $scope.account.accountname = "";
                 $scope.accountTypes = ["regular","multisig","read","readmultisig"];
-                $scope.wallets = APIService.wallets.query();
-                
-
-
+                $scope.wallets = APIService.wallets.query();           
                 $scope.addNewKey = function() {
-                  // var newItemNo = $scope.account.keys.length+1;
                   $scope.account.keys.push("");          
                 };
-
                 $scope.submitNewAccount = function () {
                     $scope.account.keys = $scope.account.keys.filter(
                         function(item, index, array){ return item;});
@@ -381,7 +429,6 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                                     }
                     );
                 };
-
                 $scope.cleanForm = function (tipus,nom) {
                     $scope.alerts = [];
                     delete $scope.account;
@@ -441,8 +488,8 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
             templateUrl: "scripts/views/addkeys.html",
             restrict: 'E',
 
-            controller: ['$scope','APIService','NotificationService', 
-              function($scope,APIService,NotificationService){
+            controller: ['$scope','APIService', 
+              function($scope,APIService){
                 $scope.newKeys = [];
                 $scope.alerts = [];
 
@@ -467,7 +514,6 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                                         $scope.addAlert('success','Keys added correctly');
                                         $scope.newKeys = [];
                                         $scope.getAccountDetails($scope.aname, $scope.wname);
-                                        NotificationService.setAccInfo(true);
                                     },
                                     function (errorResult) {
                                         $scope.alerts = [];
