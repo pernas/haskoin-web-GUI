@@ -74,18 +74,6 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
             return viewLocation === $location.path();
         };
 
-        self.canIAddKeys = function (account) {
-            if (account) {
-              if (account.type === "multisig" || account.type === "readmultisig") {
-                if (account.keys.length < account.total) {
-                    return true;
-                };
-              };
-            };
-            return false;
-        };
-
-
     }])
     ////////////////////////////////////////////////////////////////////////////
     // ROUTES CONTROLLERS
@@ -240,6 +228,18 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                         );
                     };
                 };
+
+                $scope.canIAddKeys = function (account) {
+                    if (account) {
+                      if (account.type === "multisig" || account.type === "readmultisig") {
+                        if (account.keys.length < account.total) {
+                            return true;
+                        };
+                      };
+                    };
+                    return false;
+                };
+                
                 $scope.$watchGroup(['aname','wname'], 
                     function(newValues, oldValues) {
                         $scope.getAccountDetails(newValues[0],newValues[1]);

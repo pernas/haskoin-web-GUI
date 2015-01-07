@@ -1,198 +1,211 @@
-<form role="form"
-      name="newAccountForm" 
-      ng-submit="submitNewAccount()">
+<div class="panel panel-default">
+<table class="table       
+              table-striped 
+              table-condensed">
+  <caption><h3> Create Account </h3></caption>
+  <tbody>
+    <tr>  
+      <td>
+        <form role="form"
+              name="newAccountForm" 
+              ng-submit="submitNewAccount()">
 
-    <div class="form-group">    
-      <label for="accounttype"> Account type: </label>
-      <select id         = "accounttype"
-              class      = "form-control" 
-              ng-model   = "account.type"
-              ng-change  = "cleanForm(account.type,account.accountname)"
-              ng-options = "t for t in accountTypes" >
-      </select>
-    </div>
-    
-    <div class="form-group">        
-      <label for="parentwallet"> Parent Wallet: </label>
-      <select id         = "parentwallet"
-              class      = "form-control" 
-              ng-model   = "targetWallet"
-              ng-options = "w.name as w.name for w in wallets" 
-              required>
-      </select>
-    </div>
+            <div class="form-group">    
+              <label for="accounttype"> Account type: </label>
+              <select id         = "accounttype"
+                      class      = "form-control" 
+                      ng-model   = "account.type"
+                      ng-change  = "cleanForm(account.type,account.accountname)"
+                      ng-options = "t for t in accountTypes" >
+              </select>
+            </div>
+            
+            <div class="form-group">        
+              <label for="parentwallet"> Parent Wallet: </label>
+              <select id         = "parentwallet"
+                      class      = "form-control" 
+                      ng-model   = "targetWallet"
+                      ng-options = "w.name as w.name for w in wallets" 
+                      required>
+              </select>
+            </div>
 
-    <div ng-switch="account.type">
-        
-        <!-- REGULAR ACCOUNT FORM -->
+            <div ng-switch="account.type">
+                
+                <!-- REGULAR ACCOUNT FORM -->
 
-        <div ng-switch-when="regular">
-          <div class    ="form-group"> 
-          <label for    ="accountname"> Account name: </label>
-          <input id       = "accountname" 
-                 class    = "form-control" 
-                 type     = "text" 
-                 ng-model = "account.accountname" 
-                 required ></input>
-          </div>
+                <div ng-switch-when="regular">
+                  <div class    ="form-group"> 
+                  <label for    ="accountname"> Account name: </label>
+                  <input id       = "accountname" 
+                         class    = "form-control" 
+                         type     = "text" 
+                         ng-model = "account.accountname" 
+                         required ></input>
+                  </div>
 
-          <div class="form-group">
-            <button type        = "submit"
-                    class       = "btn btn-default" 
-                    ng-disabled = "newAccountForm.$invalid">
-                    New Account
-            </button>
-          </div>
+                  <div class="form-group">
+                    <button type        = "submit"
+                            class       = "btn btn-default" 
+                            ng-disabled = "newAccountForm.$invalid">
+                            New Account
+                    </button>
+                  </div>
+                </div>
+
+                <!-- MULTISIG ACCOUNT FORM -->
+
+                <div ng-switch-when = "multisig"> 
+                  <div class = "form-group"> 
+                  <label for = "accountname"> Account name: </label>
+                  <input id       = "accountname"
+                         class    = "form-control"  
+                         type     = "text" 
+                         ng-model = "account.accountname" 
+                         required ></input>
+                  </div>
+                  <div class = "form-group">
+                  <label for = "requiredkeys"> Required keys: </label>
+                  <input id       = "requiredkeys"
+                         class    = "form-control"  
+                         type     = "number" 
+                         ng-model = "account.required" 
+                         required ></input>
+                  </div>
+                  <div class="form-group">
+                  <label for="totalkeys"> Total keys: </label>
+                  <input id       = "totalkeys"
+                         class    = "form-control"  
+                         type     = "number" 
+                         ng-model = "account.total" 
+                         required ></input>
+                  </div>
+
+                  <!-- Keys loop -->
+                  <div class="form-group">
+                    <button type     = "button"
+                            ng-click = "addNewKey()"
+                            ng-disabled = "!account.total || account.keys.length+1 >= account.total" 
+                            class    = "btn btn-default" >
+                            Add another key 
+                    </button>
+                  </div>
+                  <div class="form-group" data-ng-repeat="(i,key) in account.keys track by $index">
+                    <label ng-show="$first"> Keys </label>
+
+                    <input type        = "text"
+                           class       = "form-control" 
+                           ng-model    = "account.keys[i]" 
+                           name        = "" 
+                           placeholder = "Enter a key">
+                  </div>
+                  <!-- End Keys loop -->
+
+                  <div class="form-group">
+                    <button type        = "submit"
+                            class       = "btn btn-default" 
+                            ng-disabled = "newAccountForm.$invalid">
+                            New Account
+                    </button>
+                  </div>
+                </div>
+
+                <!-- READ ACCOUNT FORM -->
+
+                <div ng-switch-when="read">
+                  <div class="form-group"> 
+                  <label for="accountname"> Account name: </label>
+                  <input id       = "accountname"
+                         class    = "form-control"  
+                         type     = "text" 
+                         ng-model = "account.accountname" 
+                         required ></input>
+                  </div>
+                  <div class="form-group">
+                  <label for="accountkey"> Account key: </label>
+                  <input id       = "accountkey" 
+                         class    = "form-control" 
+                         type     = "text" 
+                         ng-model = "account.key" 
+                         required ></input>
+                  </div>
+                  <div class="form-group">
+                    <button type        = "submit"
+                            class       = "btn btn-default" 
+                            ng-disabled = "newAccountForm.$invalid">
+                            New Account
+                    </button>
+                  </div>
+                </div>
+
+                <!-- MULTISIG READ ACCOUNT FORM -->
+
+                <div ng-switch-when="readmultisig">
+                  <div class="form-group"> 
+                  <label for="accountname"> Account name: </label>
+                  <input id       = "accountname" 
+                         class    = "form-control" 
+                         type     = "text" 
+                         ng-model = "account.accountname" 
+                         required ></input>
+                  </div>
+                  <div class="form-group">
+                  <label for="requiredkeys"> Required keys: </label>
+                  <input id       = "requiredkeys"
+                         class    = "form-control"  
+                         type     = "number" 
+                         ng-model = "account.required" 
+                         required ></input>
+                  </div>
+                  <div class="form-group">
+                  <label for="totalkeys"> Total keys: </label>
+                  <input id       = "totalkeys"
+                         class    = "form-control"  
+                         type     = "number" 
+                         ng-model = "account.total" 
+                         required ></input>
+                  </div>
+
+                  <!-- Keys loop -->
+                  <div class="form-group">
+                    <button type     = "button"
+                            ng-click = "addNewKey()"
+                            ng-disabled = "!account.total || account.keys.length+1 > account.total" 
+                            class    = "btn btn-default" >
+                            Add another key 
+                    </button>
+                  </div>
+                  <div class="form-group" data-ng-repeat="(i,key) in account.keys track by $index">
+                    <label ng-show="$first"> Keys </label>
+
+                    <input type        = "text"
+                           class       = "form-control" 
+                           ng-model    = "account.keys[i]" 
+                           name        = "" 
+                           placeholder = "Enter a key">
+                  </div>
+                  <!-- End Keys loop -->
+
+                  <div class="form-group">
+                    <button type        = "submit"
+                            class       = "btn btn-default" 
+                            ng-disabled = "newAccountForm.$invalid">
+                            New Account
+                    </button>
+                  </div>
+                </div>
+
+            </div>
+        </form>
+
+        <div>
+          <alert ng-repeat = "alert in alerts" 
+                 type      = "{{alert.type}}" 
+                 close     = "closeAlert($index)">{{alert.msg}}
+          </alert>
         </div>
-
-        <!-- MULTISIG ACCOUNT FORM -->
-
-        <div ng-switch-when = "multisig"> 
-          <div class = "form-group"> 
-          <label for = "accountname"> Account name: </label>
-          <input id       = "accountname"
-                 class    = "form-control"  
-                 type     = "text" 
-                 ng-model = "account.accountname" 
-                 required ></input>
-          </div>
-          <div class = "form-group">
-          <label for = "requiredkeys"> Required keys: </label>
-          <input id       = "requiredkeys"
-                 class    = "form-control"  
-                 type     = "number" 
-                 ng-model = "account.required" 
-                 required ></input>
-          </div>
-          <div class="form-group">
-          <label for="totalkeys"> Total keys: </label>
-          <input id       = "totalkeys"
-                 class    = "form-control"  
-                 type     = "number" 
-                 ng-model = "account.total" 
-                 required ></input>
-          </div>
-
-          <!-- Keys loop -->
-          <div class="form-group">
-            <button type     = "button"
-                    ng-click = "addNewKey()"
-                    ng-disabled = "!account.total || account.keys.length+1 >= account.total" 
-                    class    = "btn btn-default" >
-                    Add another key 
-            </button>
-          </div>
-          <div class="form-group" data-ng-repeat="(i,key) in account.keys track by $index">
-            <label ng-show="$first"> Keys </label>
-
-            <input type        = "text"
-                   class       = "form-control" 
-                   ng-model    = "account.keys[i]" 
-                   name        = "" 
-                   placeholder = "Enter a key">
-          </div>
-          <!-- End Keys loop -->
-
-          <div class="form-group">
-            <button type        = "submit"
-                    class       = "btn btn-default" 
-                    ng-disabled = "newAccountForm.$invalid">
-                    New Account
-            </button>
-          </div>
-        </div>
-
-        <!-- READ ACCOUNT FORM -->
-
-        <div ng-switch-when="read">
-          <div class="form-group"> 
-          <label for="accountname"> Account name: </label>
-          <input id       = "accountname"
-                 class    = "form-control"  
-                 type     = "text" 
-                 ng-model = "account.accountname" 
-                 required ></input>
-          </div>
-          <div class="form-group">
-          <label for="accountkey"> Account key: </label>
-          <input id       = "accountkey" 
-                 class    = "form-control" 
-                 type     = "text" 
-                 ng-model = "account.key" 
-                 required ></input>
-          </div>
-          <div class="form-group">
-            <button type        = "submit"
-                    class       = "btn btn-default" 
-                    ng-disabled = "newAccountForm.$invalid">
-                    New Account
-            </button>
-          </div>
-        </div>
-
-        <!-- MULTISIG READ ACCOUNT FORM -->
-
-        <div ng-switch-when="readmultisig">
-          <div class="form-group"> 
-          <label for="accountname"> Account name: </label>
-          <input id       = "accountname" 
-                 class    = "form-control" 
-                 type     = "text" 
-                 ng-model = "account.accountname" 
-                 required ></input>
-          </div>
-          <div class="form-group">
-          <label for="requiredkeys"> Required keys: </label>
-          <input id       = "requiredkeys"
-                 class    = "form-control"  
-                 type     = "number" 
-                 ng-model = "account.required" 
-                 required ></input>
-          </div>
-          <div class="form-group">
-          <label for="totalkeys"> Total keys: </label>
-          <input id       = "totalkeys"
-                 class    = "form-control"  
-                 type     = "number" 
-                 ng-model = "account.total" 
-                 required ></input>
-          </div>
-
-          <!-- Keys loop -->
-          <div class="form-group">
-            <button type     = "button"
-                    ng-click = "addNewKey()"
-                    ng-disabled = "!account.total || account.keys.length+1 > account.total" 
-                    class    = "btn btn-default" >
-                    Add another key 
-            </button>
-          </div>
-          <div class="form-group" data-ng-repeat="(i,key) in account.keys track by $index">
-            <label ng-show="$first"> Keys </label>
-
-            <input type        = "text"
-                   class       = "form-control" 
-                   ng-model    = "account.keys[i]" 
-                   name        = "" 
-                   placeholder = "Enter a key">
-          </div>
-          <!-- End Keys loop -->
-
-          <div class="form-group">
-            <button type        = "submit"
-                    class       = "btn btn-default" 
-                    ng-disabled = "newAccountForm.$invalid">
-                    New Account
-            </button>
-          </div>
-        </div>
-
-    </div>
-</form>
-
-<div>
-  <alert ng-repeat = "alert in alerts" 
-         type      = "{{alert.type}}" 
-         close     = "closeAlert($index)">{{alert.msg}}
-  </alert>
+      </td>
+    </tr>
+  </tbody>
+</table>
 </div>
