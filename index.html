@@ -6,31 +6,21 @@
         <link rel="stylesheet" href="/static/css/style.css" />
         <link rel="stylesheet" href="/static/node_modules/bootstrap/dist/css/bootstrap.min.css" />
         <link rel="stylesheet" href="/static/node_modules/bootstrap/dist/css/bootstrap-theme.min.css" />
-        <link rel="stylesheet" href="/static/bower_components/ngDialog/css/ngDialog.min.css" />
     
     </head>
 
     <body ng-controller="WalletCtrl as wctrl" >
 
     <div class="container">
-
+<!--         
         <div class="jumbotron">
             <img width='50%' 
                  height='70%' 
                  style="margin:0px auto;display:block"
                  src="/static/images/haskoin.png">
-        </div>
-
-        <div ng-view></div>
-<!-- 
-                    <tab heading="Add keys"
-                         disabled="!wctrl.canIAddKeys(wctrl.selectedAccount)">
-                        <add-keys-form wname="{{wctrl.selectedWallet.name}}"
-                                       aname="{{wctrl.selectedAccount.name}}"
-                                       ng-hide="!wctrl.canIAddKeys(wctrl.selectedAccount)">
-                        </add-keys-form>
-                    </tab> 
+        </div> 
 -->
+        <div ng-view></div>
     </div>
 
     <div id="footer">
@@ -41,16 +31,35 @@
     </div>
 
     <!-- ------------------------------------------------------------------- -->
-    <script src="/static/node_modules/angular/angular.min.js"></script>
-    <script src="/static/node_modules/angular-route/angular-route.min.js"></script>
-    <script src="/static/node_modules/jquery/dist/jquery.min.js"></script>
-    <script src="/static/bower_components/qrcode-generator/js/qrcode.js"></script>
-    <script src="/static/bower_components/qrcode-generator/js/qrcode_UTF8.js"></script>   
-    <script src="/static/bower_components/angular-qrcode/qrcode.js"></script>
-    <script src="/static/bower_components/ngDialog/js/ngDialog.min.js"></script>
-    <script src="/static/node_modules/angular-resource/angular-resource.min.js"></script>
-    <script src="/static/node_modules/angular-bootstrap/ui-bootstrap.js"></script>
-    <script src="/static/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="/static/scripts/controllers/controller.js"></script>
+    <script 
+      src="/static/node_modules/angular/angular.min.js">
+    </script>
+    <script 
+      src="/static/node_modules/angular-route/angular-route.min.js">
+    </script>
+    <script 
+      src="/static/node_modules/jquery/dist/jquery.min.js">
+    </script>
+    <script 
+      src="/static/bower_components/qrcode-generator/js/qrcode.js">
+    </script>
+    <script 
+      src="/static/bower_components/qrcode-generator/js/qrcode_UTF8.js">
+    </script>  
+    <script 
+      src="/static/bower_components/angular-qrcode/qrcode.js">
+    </script>
+    <script 
+      src="/static/node_modules/angular-resource/angular-resource.min.js">
+    </script>
+    <script 
+      src="/static/node_modules/angular-bootstrap/ui-bootstrap.js">
+    </script>
+    <script 
+      src="/static/node_modules/bootstrap/dist/js/bootstrap.min.js">
+    </script>
+    <script 
+      src="/static/scripts/controllers/controller.js">
+    </script>
     </body>
 </html>

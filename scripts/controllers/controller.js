@@ -14,7 +14,8 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
               redirectTo: '/wallets'
           })
           .when('/new-wallet',{
-              template: '<navigation-bar></navigation-bar><new-wallet-form></new-wallet-form>'
+              template: '<navigation-bar></navigation-bar>\
+                         <new-wallet-form></new-wallet-form>'
           })
           .when('/new-account',{
               template: '<navigation-bar></navigation-bar><new-account-form></new-account-form>'
