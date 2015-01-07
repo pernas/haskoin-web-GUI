@@ -11,7 +11,6 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
 
         $routeProvider
           .when('/',{
-              template: '<navigation-bar></navigation-bar> <h1> Welcome to Haskoin Wallet </h1>',
               redirectTo: '/wallets'
           })
           .when('/new-wallet',{
@@ -52,7 +51,7 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
               controller: 'TransactionListCtrl as TLC'
           })
           .when('/wallets/:walletName/accounts/:accountName/receive',{
-              template: '<navigation-bar></navigation-bar><tabset justified="true"><tab heading="External"><addresses wname="{{AdLC.wname}}" aname="{{AdLC.aname}}" internal=false></addresses></tab><tab heading="Internal"><addresses wname="{{AdLC.wname}}" aname="{{AdLC.aname}}" internal=true></addresses></tab></tabset>',
+              template: '<navigation-bar></navigation-bar><addresses wname="{{AdLC.wname}}" aname="{{AdLC.aname}}" internal=false></addresses>',
               controller: 'AddressListCtrl as AdLC'
           })
           .when('/wallets/:walletName/accounts/:accountName/send',{
