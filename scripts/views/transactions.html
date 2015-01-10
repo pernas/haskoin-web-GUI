@@ -1,14 +1,15 @@
 <div class="panel panel-default">
 <table class="table       
-              table-striped 
+              table-striped
+              table-hover 
               table-condensed">
   <caption><h3> Transactions </h3></caption>
   <thead>
     <tr>
-      <th>Date</th>
-      <th>TxID</th>
-      <th>Confirmations</th>
-      <th>Satoshis</th>
+      <th class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> Date</th>
+      <th class="col-xs-5 col-sm-5 col-md-5 col-lg-5"> TxID</th>
+      <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2"> Confirmations</th>
+      <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2"> Satoshis</th>
     </tr>
   </thead>
   <tbody>
@@ -29,21 +30,24 @@
                           <li>Confidence: {{tx.confidence}} </li>
                           <li>isCoinbase: {{tx.isCoinbase}} </li>
                           <li>Confirmations: {{tx.confirmations}} </li>
-                      </ul> -->
+                          </ul> -->
                       <table class="table table-striped table-condensed">
-                        <caption><h4> Recipients </h4></caption>  
+
+                        <!-- <caption><h4> Recipients </h4></caption>  -->
+
                         <thead>
                           <tr>
-                            <th>Address</th>
                             <th>Label</th>
-                            <th>Local address</th>
+                            <th>Address</th>
+                            <!-- <th>Local address</th> -->
                           </tr>
                         </thead>
+
                         <tbody>
                           <tr ng-repeat="r in tx.recipients">
-                            <td> {{r.address}} </td>
                             <td> {{r.label}}   </td>
-                            <td> {{r.islocal}} </td>  
+                            <td> {{r.address}} </td>
+                            <!-- <td> {{r.islocal}} </td>   -->
                           </tr>
                         </tbody> 
 

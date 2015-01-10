@@ -1,34 +1,58 @@
-<div class="collapse navbar-collapse">
-    <ul class="nav navbar-nav">
-        <li> 
-          <a ng-href="#/wallets">
-            Wallets
-          </a>
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#/"> <img width='120px' alt="Haskoin" src="/static/images/haskoin.png"></a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li ng-class="{ active: isActive('/wallets')}">
+          <a ng-href="#/wallets"> Wallets </a>
         </li>
-        <li ng-show="wallet"> 
+        <li ng-show="wallet" 
+            ng-class="{ active: isActive('/wallets/{{wallet}}/accounts')}"> 
           <a ng-href="#/wallets/{{wallet}}/accounts">
             Accounts
           </a> 
         </li>
-        <li ng-show="account"> 
+        <li ng-show="account" 
+            ng-class="{ active: isActive('/wallets/{{wallet}}/accounts/{{account}}')}"> 
           <a ng-href="#/wallets/{{wallet}}/accounts/{{account}}">
             Details
           </a> 
         </li>
-        <li ng-show="account"> 
+        <li ng-show="account"
+            ng-class="{ active: isActive('/wallets/{{wallet}}/accounts/{{account}}/send')}"> 
           <a ng-href="#/wallets/{{wallet}}/accounts/{{account}}/send">
             Send
           </a> 
         </li>
-        <li ng-show="account"> 
+        <li ng-show="account"
+            ng-class="{ active: isActive('/wallets/{{wallet}}/accounts/{{account}}/receive')}"> 
           <a ng-href="#/wallets/{{wallet}}/accounts/{{account}}/receive">
             Receive
           </a> 
         </li>
-        <li ng-show="account"> 
+        <li ng-show="account"
+            ng-class="{ active: isActive('/wallets/{{wallet}}/accounts/{{account}}/transactions')}"> 
           <a ng-href="#/wallets/{{wallet}}/accounts/{{account}}/transactions">
             Transactions
           </a> 
         </li>
-    </ul>
-</div>
+      </ul>
+    <p ng-show="account" class="navbar-text navbar-right">
+      <balance wname="{{wallet}}"
+               aname="{{account}}">
+      </balance>
+    </p>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
