@@ -29,7 +29,7 @@
             Details
           </a> 
         </li>
-        <li ng-show="account"
+        <li ng-show="account && !isOnlyRead()"
             ng-class="{ active: isActive('/wallets/{{wallet}}/accounts/{{account}}/send')}"> 
           <a ng-href="#/wallets/{{wallet}}/accounts/{{account}}/send">
             Send
@@ -45,6 +45,18 @@
             ng-class="{ active: isActive('/wallets/{{wallet}}/accounts/{{account}}/transactions')}"> 
           <a ng-href="#/wallets/{{wallet}}/accounts/{{account}}/transactions">
             Transactions
+          </a> 
+        </li>
+        <li ng-show="account && isMultisig()"
+            ng-class="{ active: isActive('/wallets/{{wallet}}/accounts/{{account}}/signTx')}"> 
+          <a ng-href="#/wallets/{{wallet}}/accounts/{{account}}/signTx">
+            Sign Tx
+          </a> 
+        </li>
+        <li ng-show="account && isMultisig()"
+            ng-class="{ active: isActive('/wallets/{{wallet}}/accounts/{{account}}/importTx')}"> 
+          <a ng-href="#/wallets/{{wallet}}/accounts/{{account}}/importTx">
+            Import Tx
           </a> 
         </li>
       </ul>

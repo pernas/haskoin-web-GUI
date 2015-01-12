@@ -69,11 +69,21 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
           .when('/wallets/:walletName/accounts/:accountName/send',{
               template: '<navigation-bar></navigation-bar>\
                          <send-form wname="{{SFC.wname}}"\
-                                    aname="{{SFC.aname}">\
+                                    aname="{{SFC.aname}}">\
                          </send-form>',
               controller: 'SendFormCtrl as SFC'
           })
-
+          .when('/wallets/:walletName/accounts/:accountName/signTx',{
+              template: '<navigation-bar></navigation-bar>',
+              controller: 'SignCtrl as SiC'
+          })
+          .when('/wallets/:walletName/accounts/:accountName/importTx',{
+              template: '<navigation-bar></navigation-bar>\
+                         <import-tx-form wname="{{ImC.wname}}"\
+                                    aname="{{ImC.aname}}">\
+                         </import-tx-form>',
+              controller: 'ImportCtrl as ImC'
+          })
                 
 
           .otherwise({redirectTo: '/'});
@@ -118,6 +128,18 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
         self.aname = $routeParams.accountName;
     }])
     .controller('SendFormCtrl', ['$routeParams',
+      function($routeParams){
+        var self = this;
+        self.wname = $routeParams.walletName;
+        self.aname = $routeParams.accountName;
+    }])
+    .controller('SignCtrl', ['$routeParams',
+      function($routeParams){
+        var self = this;
+        self.wname = $routeParams.walletName;
+        self.aname = $routeParams.accountName;
+    }])
+    .controller('ImportCtrl', ['$routeParams',
       function($routeParams){
         var self = this;
         self.wname = $routeParams.walletName;
@@ -206,13 +228,29 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
         return {
             templateUrl: "scripts/views/navigationBar.html",
             restrict: 'E',
-            controller: ['$scope','$routeParams','$location',
-              function($scope, $routeParams, $location){
+            controller: ['$scope','$routeParams','$location','APIService',
+              function($scope, $routeParams, $location, APIService){
                 $scope.wallet = $routeParams.walletName;
                 $scope.account = $routeParams.accountName; 
                 $scope.isActive = function (viewLocation) { 
                     return viewLocation === $location.path();
                 }; 
+                $scope.getAccountDetails = function(accName, walName) {
+                    if (accName) {
+                        $scope.accountDetails = APIService.accounts.get(
+                            { aname:accName, wname:walName }
+                        );
+                    };
+                };
+                $scope.getAccountDetails($scope.account,$scope.wallet);
+
+                $scope.isMultisig = function(){
+                    return $scope.accountDetails.type === "multisig"; 
+                };
+                $scope.isOnlyRead = function(){
+                    return $scope.accountDetails.type === "readmultisig" ||
+                           $scope.accountDetails.type === "read";
+                };
               }
             ],
             scope: {}
@@ -304,6 +342,12 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                 $scope.elemxpage   = 10;
                 $scope.currentPage = 1;   
 
+                $scope.isTransaction = function (tx) { 
+                    return tx.confidence !== 'offline'; 
+                };
+                $scope.isProposition = function (tx) { 
+                    return tx.confidence === 'offline'; 
+                };
                 $scope.getTransactionsList = function(accName, wallName) {
                     if (accName) {
                         $scope.infoPage = APIService.transactions.get(
@@ -341,7 +385,9 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
         return {
             templateUrl: "scripts/views/addresses.html",
             restrict: 'E',
-            controller: ['$scope','APIService', function($scope,APIService){
+            controller: ['$scope',
+                         '$route',
+                         'APIService', function($scope,$route,APIService){
                 
                 $scope.maxSize     = 5;   // pagination bar buttons
                 $scope.elemxpage   = 10;
@@ -383,6 +429,20 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                             ,internal: $scope.internal
                         }
                     );
+                };
+                $scope.createNewAddr = function (label) {          
+                    var x    = {};
+                    x.label  = label; 
+                    var newLabeledAddr = new APIService.address(x);
+                    newLabeledAddr.$save(
+                        {
+                             wname: $scope.wname
+                            ,aname: $scope.aname
+                        }
+                    );
+                    $scope.label.label = "";
+                    $route.reload();
+
                 };
                 $scope.$watchGroup(['aname','wname'], 
                     function(newValues, oldValues) {
@@ -433,6 +493,8 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
             scope: {}
         };
     }])
+
+
 
     .directive('newAccountForm', [function() {
         return {
@@ -503,6 +565,7 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                 $scope.payment.recipients = [];
                 $scope.payment.fee = 10000;
                 $scope.payment.minconf = 1;
+                $scope.payment.proposition = false;
      
                 $scope.submitNewPayment = function () {
                     $scope.payment.recipients.push([$scope.r,$scope.a]);
@@ -517,6 +580,46 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                                         $scope.addAlert('danger',
                                             errorResult.data.errors);
                                         $scope.send.recipients = [];
+                                    }
+                    );
+                };
+            }],
+            scope: {
+                wname: '@',
+                aname: '@'
+            }
+        };
+    }])
+
+    .directive('importTxForm', [function() {
+        return {
+            templateUrl: "scripts/views/importTxForm.html",
+            restrict: 'E',
+            controller: ['$scope','APIService', function($scope,APIService){
+                $scope.alerts = [];
+                $scope.addAlert = function(t,m) {
+                    $scope.alerts.push({type: t, msg: m});
+                };
+                $scope.closeAlert = function(index) {
+                    $scope.alerts.splice(index, 1);
+                };
+                $scope.details = {};
+                $scope.details.type = "import";
+
+     
+                $scope.submitTransaction = function () {
+                    
+                    var newTx = new APIService.transactions($scope.details);
+                    newTx.$save({aname:$scope.aname, wname:$scope.wname},
+                                    function (successResult) {
+                                        $scope.alerts = [];
+                                        $scope.addAlert('success',newTx);
+                                    },
+                                    function (errorResult) {
+                                        $scope.alerts = [];
+                                        $scope.addAlert('danger',
+                                            errorResult.data.errors);
+                                        
                                     }
                     );
                 };

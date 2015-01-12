@@ -3,6 +3,8 @@
               table-striped
               table-hover 
               table-condensed">
+
+
   <caption><h3> Transactions </h3></caption>
   <thead>
     <tr>
@@ -15,10 +17,17 @@
   <tbody>
 
 
-            <tr ng-repeat="tx in infoPage.txpage">  
-              <td>
+            <tr ng-repeat="tx in infoPage.txpage" 
+                ng-class="{ warning: isProposition(tx)}">  
+              <td ng-show="isTransaction(tx)">
                 <span ng-show = "tx.confirmationdate"> 
-                {{tx.confirmationdate * 1000 | date:'yyyy-MM-dd HH:mm:ss Z'}} </span>  
+                  {{tx.confirmationdate * 1000 | date:'dd-MM-yyyy (HH:mm)'}}
+                </span>  
+              </td>
+              <td ng-show="isProposition(tx)">
+                <span ng-show = "tx.receiveddate"> 
+                  {{tx.receiveddate * 1000 | date:'dd-MM-yyyy (HH:mm)'}}
+                </span>  
               </td>
               <td>
                     <span ng-click="isCollapsed = !isCollapsed">
@@ -26,14 +35,15 @@
                     </span>
                     <div collapse="!isCollapsed">
                       <hr>
-<!--                       <ul>
+<!--                      <ul>
                           <li>Confidence: {{tx.confidence}} </li>
                           <li>isCoinbase: {{tx.isCoinbase}} </li>
                           <li>Confirmations: {{tx.confirmations}} </li>
-                          </ul> -->
+                          </ul> 
+-->
                       <table class="table table-striped table-condensed">
 
-                        <!-- <caption><h4> Recipients </h4></caption>  -->
+                        <caption><h4> Share: {{tx.tx}} </h4></caption>
 
                         <thead>
                           <tr>
@@ -55,7 +65,8 @@
                     </div>
               </td>
               <td>
-                <span> {{tx.confirmations}} </span>
+                <span ng-show="isTransaction(tx)"> {{tx.confirmations}} </span>
+                <span ng-show="isProposition(tx)"> Proposition </span>
               </td> 
               <td> 
                 <span> {{tx.value | currency: "S ":0}} </span> 
