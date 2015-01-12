@@ -1,0 +1,43 @@
+<div class="panel panel-default">
+<table class="table       
+              table-striped 
+              table-condensed">
+  <caption><h3> Import Transaction </h3></caption>
+  <tbody>
+    <tr>  
+      <td>
+        <div>
+          <form role="form"
+                name="importTxForm" 
+                ng-submit="submitTransaction()">
+
+              <div class="form-group">
+                <label for="tx"> Tx: </label>
+                <input id="tx"
+                       class="form-control" 
+                       type="text" 
+                       ng-model="details.tx" 
+                       required ></input>
+              </div>
+
+              <div class="form-group">
+                <button type="submit"
+                        class="btn btn-default" 
+                        ng-disabled="importTxForm.$invalid">
+                        Import
+                </button>
+              </div>
+
+          </form>
+
+          <div>
+            <alert ng-repeat="alert in alerts" 
+                   type="{{alert.type}}" 
+                   close="closeAlert($index)">{{alert.msg}}
+            </alert>
+          </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+</div>
