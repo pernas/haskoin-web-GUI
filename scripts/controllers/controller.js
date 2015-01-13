@@ -313,7 +313,7 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
 
     .directive('balance', [function() {
         return {
-            template: '{{balance.balance.balance | currency: "S ":0}}',
+            template: '{{balance.balance.balance / 100000.0 | number:5}} mBTC',
             restrict: 'E',
             controller: ['$scope',
                          'APIService',

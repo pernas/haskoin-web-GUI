@@ -10,8 +10,8 @@
     <tr>
       <th class="col-xs-3 col-sm-3 col-md-3 col-lg-3"> Date</th>
       <th class="col-xs-5 col-sm-5 col-md-5 col-lg-5"> TxID</th>
-      <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2"> Confirmations</th>
-      <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2"> Satoshis</th>
+      <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2 text-right"> Confirmations</th>
+      <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2 text-right"> mBTC</th>
     </tr>
   </thead>
   <tbody>
@@ -64,12 +64,12 @@
                       </table>
                     </div>
               </td>
-              <td>
+              <td class="text-right">
                 <span ng-show="isTransaction(tx)"> {{tx.confirmations}} </span>
                 <span ng-show="isProposition(tx)"> Proposition </span>
               </td> 
-              <td> 
-                <span> {{tx.value | currency: "S ":0}} </span> 
+              <td class="text-right"> 
+                <span> {{tx.value / 100000.0 | number:5}} </span> 
               </td>
             </tr>
 

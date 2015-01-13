@@ -10,7 +10,7 @@
               <div ng-switch="account.type">
                     <ul class="list-unstyled"
                         ng-switch-when="regular">
-                        <li>Balance: {{balance.balance.balance | currency: "S ":0}}</li>
+                        <li>Balance: {{balance.balance.balance / 100000.0| number:5}} mBTC</li>
                         <li>Wallet: {{account.wallet}}</li>
                         <li>Name: {{account.name}}</li>
                         <li>Type: {{account.type}}</li>
@@ -18,7 +18,7 @@
                     </ul>
                     <ul class="list-unstyled"
                         ng-switch-when="multisig">
-                        <li>Balance: {{balance.balance.balance | currency: "S ":0}}</li>
+                        <li>Balance: {{balance.balance.balance / 100000.0| number:5}} mBTC</li>
                         <li>Wallet: {{account.wallet}}</li>
                         <li>Name: {{account.name}}</li>
                         <li>Type: {{account.type}}</li>
@@ -32,7 +32,7 @@
                     </ul>
                     <ul class="list-unstyled"
                         ng-switch-when="read">
-                        <li>Balance: {{balance.balance.balance | currency: "S ":0}}</li>
+                        <li>Balance: {{balance.balance.balance / 100000.0| number:5}} mBTC</li>
                         <li>Name: {{account.name}}</li>
                         <li>Type: {{account.type}}</li>
                         <li>Key: {{account.key}}</li>
@@ -40,7 +40,7 @@
                     </ul>
                     <ul class="list-unstyled"
                         ng-switch-when="readmultisig">
-                        <li>Balance: {{balance.balance.balance | currency: "S ":0}}</li>
+                        <li>Balance: {{balance.balance.balance / 100000.0| number:5}} mBTC</li>
                         <li>Name: {{account.name}}</li>
                         <li>Type: {{account.type}}</li>
                         <li>Required: {{account.required}} / {{account.total}} keys</li>

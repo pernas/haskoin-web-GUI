@@ -29,7 +29,7 @@
     <tr>
       <th class="col-xs-3 col-sm-3 col-md-3 col-lg-3">Label</th>
       <th class="col-xs-7 col-sm-7 col-md-7 col-lg-7">Address</th>
-      <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2">Balance</th>
+      <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2 text-right">mBTC</th>
     </tr>
   </thead>
   <tbody>
@@ -60,14 +60,16 @@
                     </span>
                     <div collapse="!isCollapsed">
                       <!-- <div class="well well-lg"> -->
+                      
                         <qrcode data = {{ad.address.address|addrForQR}}
                                 size = "100">
                         </qrcode>
+
                       <!-- </div>  -->
                     </div>
               </td> 
-              <td>
-                <span> {{ad.finalbalance.balance | currency: "S ":0}} </span> 
+              <td class="text-right">
+                <span> {{ad.finalbalance.balance / 100000.0 | number:5}}</span> 
               </td>
             </tr>
 
