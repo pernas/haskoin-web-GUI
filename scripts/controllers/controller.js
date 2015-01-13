@@ -74,7 +74,10 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
               controller: 'SendFormCtrl as SFC'
           })
           .when('/wallets/:walletName/accounts/:accountName/signTx',{
-              template: '<navigation-bar></navigation-bar>',
+              template: '<navigation-bar></navigation-bar>\
+                         <sign-tx-form wname="{{SiC.wname}}"\
+                                    aname="{{SiC.aname}}">\
+                         </sign-tx-form>',
               controller: 'SignCtrl as SiC'
           })
           .when('/wallets/:walletName/accounts/:accountName/importTx',{
@@ -174,7 +177,12 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                         ),
           transactions: $resource('/wallets/:wname/accounts/:aname/txs', 
                                   { wname:'@wname', aname:'@aname'}
-                        ) 
+                        ),
+          transaction:  $resource('/wallets/:wname/accounts/:aname/txs/:txhash', 
+                                  { wname:'@wname'
+                                  , aname:'@aname'
+                                  , txhash:'@txhash'}
+                        )  
           };
     }])
 
@@ -620,6 +628,59 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                                         $scope.addAlert('danger',
                                             errorResult.data.errors);
                                         
+                                    }
+                    );
+                };
+            }],
+            scope: {
+                wname: '@',
+                aname: '@'
+            }
+        };
+    }])
+
+    .directive('signTxForm', [function() {
+        return {
+            templateUrl: "scripts/views/signTxForm.html",
+            restrict: 'E',
+            controller: ['$scope','APIService', function($scope,APIService){
+                $scope.alerts = [];
+                $scope.addAlert = function(t,m) {
+                    $scope.alerts.push({type: t, msg: m});
+                };
+                $scope.closeAlert = function(index) {
+                    $scope.alerts.splice(index, 1);
+                };
+                $scope.details = {};
+                $scope.details.type = "sign";
+                $scope.details.final = false;
+
+     
+                $scope.submitSign = function () {
+                    
+                    var newTx = new APIService.transactions($scope.details);
+                    newTx.$save({aname:$scope.aname, wname:$scope.wname},
+                                    function (successResult) {
+                                        $scope.signedTx = APIService.transaction.get(
+                                            {
+                                                 wname:       $scope.wname
+                                                ,aname:       $scope.aname
+                                                ,txhash:      $scope.newTx.txhash
+                                            },
+                                            function (successResult) {
+                                                $scope.alerts = [];
+                                                $scope.addAlert('success',signedTx.tx);
+                                            },
+                                            function (errorResult) {
+                                                $scope.alerts = [];
+                                                $scope.addAlert('danger',errorResult.data.errors);
+                                            }
+                                        );
+                                    },
+                                    function (errorResult) {
+                                        $scope.alerts = [];
+                                        $scope.addAlert('danger',
+                                            errorResult.data.errors);    
                                     }
                     );
                 };
