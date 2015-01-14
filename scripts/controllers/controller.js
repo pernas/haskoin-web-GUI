@@ -253,11 +253,15 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                 $scope.getAccountDetails($scope.account,$scope.wallet);
 
                 $scope.isMultisig = function(){
+                    if ($scope.accountDetails ) {
                     return $scope.accountDetails.type === "multisig"; 
+                    };
                 };
                 $scope.isOnlyRead = function(){
+                    if ($scope.accountDetails ) {
                     return $scope.accountDetails.type === "readmultisig" ||
                            $scope.accountDetails.type === "read";
+                    };
                 };
               }
             ],

@@ -42,6 +42,7 @@
             Receive
           </a> 
         </li>
+<!--         
         <li ng-show="account"
             ng-class="{ active: isActive('/wallets/{{wallet}}/accounts/{{account}}/transactions')}"> 
           <a ng-href="#/wallets/{{wallet}}/accounts/{{account}}/transactions">
@@ -60,6 +61,34 @@
             Import Tx
           </a> 
         </li>
+ -->
+        <li ng-show = "account" 
+            class   = "dropdown"
+            ng-class="{ active: isActive('/wallets/{{wallet}}/accounts/{{account}}/signTx') ||
+                                isActive('/wallets/{{wallet}}/accounts/{{account}}/transactions') ||
+                                isActive('/wallets/{{wallet}}/accounts/{{account}}/importTx') }"
+            >
+          <a href          = "#" 
+             class         = "dropdown-toggle" 
+             role          = "button" 
+             aria-expanded = "false"> Transactions <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="#/wallets/{{wallet}}/accounts/{{account}}/transactions">List</a></li>
+            <li class="divider"></li>
+            <li ng-class="{ disabled: !isMultisig()}">
+              <a href="#/wallets/{{wallet}}/accounts/{{account}}/signTx">
+                Sign
+              </a>
+            </li>
+            <li ng-class="{ disabled: !isMultisig()}">
+              <a href="#/wallets/{{wallet}}/accounts/{{account}}/importTx">
+                Import
+              </a>
+            </li>
+          </ul>
+        </li>
+
+
       </ul>
     <p ng-show="account" class="navbar-text navbar-right">
       <balance wname="{{wallet}}"
