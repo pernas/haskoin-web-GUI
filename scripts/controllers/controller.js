@@ -694,7 +694,7 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
 
     .directive('addKeysForm', [function() {
         return {
-            templateUrl: "scripts/views/addkeys.html",
+            templateUrl: "scripts/views/addKeys.html",
             restrict: 'E',
 
             controller: ['$scope','APIService', 
