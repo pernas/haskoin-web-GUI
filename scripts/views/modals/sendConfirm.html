@@ -1,0 +1,31 @@
+<!--  
+<div class="panel panel-default">
+<table class="table       
+              table-striped
+              table-hover 
+              table-condensed">
+  <caption> Recipients </caption>
+  <thead>
+    <tr>
+      <th class="col-xs-9 col-sm-9 col-md-9 col-lg-9"> Address</th>
+      <th class="col-xs-3 col-sm-3 col-md-3 col-lg-3 text-right"> mBTC</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="r in payment.recipients">  
+      <td> <span> {{r[0]}} </span> </td>
+      <td class="text-right"> <span> {{r[1]}} </span> </td>
+    </tr>
+  </tbody>
+</table>
+</div> 
+ -->
+
+<dl class="dl-horizontal">
+  <dt>Recipient</dt>
+  <dd class="text-overflow">{{payment.recipients[0][0]}}</dd>
+  <dt>Amount</dt>
+  <dd class="text-overflow">{{payment.recipients[0][1]}} mBTC</dd>
+  <dt>Fee</dt>
+  <dd class="text-overflow">{{payment.fee / 100000}} mBTC</dd>
+</dl>

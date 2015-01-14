@@ -9,7 +9,7 @@
         <div>
           <form role="form"
                 name="sendForm" 
-                ng-submit="submitNewPayment()">
+                ng-submit="confirmPaymentModal()">
 
               <div class="form-group">
                 <label for="recipient"> Recipient: </label>
@@ -21,10 +21,11 @@
               </div>
 
               <div class="form-group">
-                <label for="amount"> Satoshi amount: </label>
+                <label for="amount"> mBTC: </label>
                 <input id="amount"
                        class="form-control" 
-                       type="number" 
+                       type="number"
+                       step="0.00001"
                        ng-model="a" 
                        required ></input>
               </div>

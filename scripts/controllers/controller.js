@@ -1,7 +1,8 @@
 angular.module('HaskoinApp', ['monospaced.qrcode'
                              ,'ngResource'
                              ,'ui.bootstrap'
-                             ,'ngRoute'])
+                             ,'ngRoute'
+                             ,'fundoo.services'])
     ////////////////////////////////////////////////////////////////////////////
     // CONFIG ROUTES
     ////////////////////////////////////////////////////////////////////////////
@@ -560,11 +561,19 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
         };
     }])
 
+    .controller('confirmPaymentModalCtrl', ['$scope', 'payment',
+       function($scope, payment) {
+        $scope.payment = payment;
+    }])
+
     .directive('sendForm', [function() {
         return {
             templateUrl: "scripts/views/sendForm.html",
             restrict: 'E',
-            controller: ['$scope','APIService', function($scope,APIService){
+            controller: ['$scope',
+                         'APIService',
+                         'createDialog',
+              function($scope, APIService, createDialog){
                 $scope.alerts = [];
                 $scope.addAlert = function(t,m) {
                     $scope.alerts.push({type: t, msg: m});
@@ -580,7 +589,8 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                 $scope.payment.proposition = false;
      
                 $scope.submitNewPayment = function () {
-                    $scope.payment.recipients.push([$scope.r,$scope.a]);
+                    $scope.payment.recipients = [];
+                    $scope.payment.recipients.push([$scope.r,$scope.a*100000]); //amout submited in satoshi
                     var newpayment = new APIService.transactions($scope.payment);
                     newpayment.$save({aname:$scope.aname, wname:$scope.wname},
                                     function (successResult) {
@@ -591,10 +601,35 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                                         $scope.alerts = [];
                                         $scope.addAlert('danger',
                                             errorResult.data.errors);
-                                        $scope.send.recipients = [];
+                                        $scope.payment.recipients = [];
                                     }
                     );
                 };
+
+                $scope.confirmPaymentModal = function() {
+                    $scope.payment.recipients = [];
+                    $scope.payment.recipients.push([$scope.r,$scope.a]);  //amout showed in mBTC
+                    createDialog('scripts/views/modals/sendConfirm.html', {
+                      id: 'sendConfirmation',
+                      title: 'Payment confirmation',
+                      backdrop: true,
+                      controller: 'confirmPaymentModalCtrl',
+                      success: {label: 'Accept', 
+                                fn: function() {$scope.submitNewPayment();}
+                            },
+                      cancel: {label: 'Cancel', fn: null},
+                      css: {
+                              top: '100px',
+                              left: '0%',
+                              margin: '0 auto'
+                            }
+                      },
+                      // parameters for the modal
+                      { payment: $scope.payment }
+                    );
+                };
+
+
             }],
             scope: {
                 wname: '@',
