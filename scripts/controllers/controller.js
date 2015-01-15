@@ -13,6 +13,8 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
         $routeProvider
           .when('/',{
               redirectTo: '/wallets'
+              // template: '<navigation-bar></navigation-bar>\
+              //            <h2>Welcome to Haskoin wallet</h2>'
           })
           .when('/new-wallet',{
               template: '<navigation-bar></navigation-bar>\
@@ -318,7 +320,7 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
 
     .directive('balance', [function() {
         return {
-            template: '{{balance.balance.balance / 100000.0 | number:5}} mBTC',
+            template: '<strong>{{balance.balance.balance / 100000.0 | number:5}} mBTC</strong>',
             restrict: 'E',
             controller: ['$scope',
                          'APIService',
@@ -561,9 +563,12 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
         };
     }])
 
-    .controller('confirmPaymentModalCtrl', ['$scope', 'payment',
-       function($scope, payment) {
+    .controller('confirmPaymentModalCtrl', ['$scope','payment','data',
+       function($scope, payment, data) {
         $scope.payment = payment;
+        $scope.wallet = data.wallet;
+        $scope.account = data.account;
+        $scope.isMultisig = data.multisig;
     }])
 
     .directive('sendForm', [function() {
@@ -581,6 +586,21 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                 $scope.closeAlert = function(index) {
                     $scope.alerts.splice(index, 1);
                 };
+                $scope.getAccountDetails = function(accName, walName) {
+                    if (accName) {
+                        var accountDetails = APIService.accounts.get(
+                            { aname:accName, wname:walName }
+                        );
+                        return accountDetails;
+                    };
+                    return {};
+                };
+                $scope.isMultisig = function(acc){
+                    if (acc) {return acc.type === "multisig"; }
+                    else {return false;};
+                };
+
+                $scope.account = $scope.getAccountDetails($scope.aname,$scope.wname);
                 $scope.payment = {};
                 $scope.payment.type = "send";
                 $scope.payment.recipients = [];
@@ -607,11 +627,15 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                 };
 
                 $scope.confirmPaymentModal = function() {
+                    var ms = $scope.isMultisig($scope.account);
+                    var title = "";
+                    if (!ms) {modalTitle = "Payment confirmation";} 
+                    else {modalTitle = "Proposotion confirmation";};
                     $scope.payment.recipients = [];
                     $scope.payment.recipients.push([$scope.r,$scope.a]);  //amout showed in mBTC
                     createDialog('scripts/views/modals/sendConfirm.html', {
                       id: 'sendConfirmation',
-                      title: 'Payment confirmation',
+                      title: modalTitle,
                       backdrop: true,
                       controller: 'confirmPaymentModalCtrl',
                       success: {label: 'Accept', 
@@ -625,7 +649,12 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                             }
                       },
                       // parameters for the modal
-                      { payment: $scope.payment }
+                      { payment: $scope.payment,
+                        data: { wallet: $scope.wname 
+                               ,account: $scope.aname
+                               ,multisig: ms
+                             }
+                      }
                     );
                 };
 

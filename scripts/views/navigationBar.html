@@ -15,8 +15,11 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
+<!-- 
         <li ng-class="{ active: isActive('/wallets')}">
-          <a ng-href="#/wallets"> Wallets </a>
+          <a ng-href="#/wallets"> 
+            Wallets 
+          </a>
         </li>
         <li ng-show="wallet" 
             ng-class="{ active: isActive('/wallets/{{wallet}}/accounts')}"> 
@@ -24,6 +27,7 @@
             Accounts
           </a> 
         </li>
+-->
         <li ng-show="account" 
             ng-class="{ active: isActive('/wallets/{{wallet}}/accounts/{{account}}')}"> 
           <a ng-href="#/wallets/{{wallet}}/accounts/{{account}}">
@@ -98,4 +102,19 @@
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
+</p>
+<p>
+<div class="btn-group btn-breadcrumb">
+    <a ng-href="#/wallets" 
+       class="btn btn-default"><i class="glyphicon glyphicon-home"></i>
+    </a>
+    <a ng-show="wallet" 
+       ng-href="#/wallets/{{wallet}}/accounts" 
+       class="btn btn-default">{{wallet}}
+    </a>
+    <a ng-show="account" n
+       g-href="#/wallets/{{wallet}}/accounts/{{account}}" 
+       class="btn btn-default">{{account}}
+    </a>
+</div>
 </p>
