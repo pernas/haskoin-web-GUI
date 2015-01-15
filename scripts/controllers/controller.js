@@ -278,7 +278,8 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
             restrict: 'E',
             controller: ['$scope',
                          'APIService',
-              function($scope,APIService){
+                         'createDialog',
+              function($scope,APIService,createDialog){
           
                 $scope.getAccountDetails = function(accName, walName) {
                     if (accName) {

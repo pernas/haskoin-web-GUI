@@ -103,18 +103,18 @@
   </div><!-- /.container-fluid -->
 </nav>
 </p>
-<p>
-<div class="btn-group btn-breadcrumb">
-    <a ng-href="#/wallets" 
-       class="btn btn-default"><i class="glyphicon glyphicon-home"></i>
-    </a>
-    <a ng-show="wallet" 
-       ng-href="#/wallets/{{wallet}}/accounts" 
-       class="btn btn-default">{{wallet}}
-    </a>
-    <a ng-show="account" 
-       ng-href="#/wallets/{{wallet}}/accounts/{{account}}" 
-       class="btn btn-default">{{account}}
-    </a>
-</div>
-</p>
+
+
+  <ol class="breadcrumb">
+    <li> <a ng-href="#/wallets"> home </a> </li>
+    <li ng-show="wallet">
+      <a ng-href="#/wallets/{{wallet}}/accounts">
+        {{wallet}}
+      </a>
+    </li>
+    <li ng-show="account">
+      <a ng-href="#/wallets/{{wallet}}/accounts/{{account}}">
+        {{account}}
+      </a>
+    </li> 
+  </ol>
