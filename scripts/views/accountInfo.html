@@ -8,49 +8,81 @@
       <td>
         <div>
               <div ng-switch="account.type">
-                    <ul class="list-unstyled"
-                        ng-switch-when="regular">
-                        <li>Balance: {{balance.balance.balance / 100000.0| number:5}} mBTC</li>
-                        <li>Wallet: {{account.wallet}}</li>
-                        <li>Name: {{account.name}}</li>
-                        <li>Type: {{account.type}}</li>
-                        <li>Key: {{account.key}}</li>
-                    </ul>
-                    <ul class="list-unstyled"
-                        ng-switch-when="multisig">
-                        <li>Balance: {{balance.balance.balance / 100000.0| number:5}} mBTC</li>
-                        <li>Wallet: {{account.wallet}}</li>
-                        <li>Name: {{account.name}}</li>
-                        <li>Type: {{account.type}}</li>
-                        <li>Required: {{account.required}} / {{account.total}} keys</li>
-                        <li>Public Keys:
-                            <ul>
-                                <li ng-repeat="k in account.keys">{{k}}</li>
-                            </ul>
-                        </li>
-                        
-                    </ul>
-                    <ul class="list-unstyled"
-                        ng-switch-when="read">
-                        <li>Balance: {{balance.balance.balance / 100000.0| number:5}} mBTC</li>
-                        <li>Name: {{account.name}}</li>
-                        <li>Type: {{account.type}}</li>
-                        <li>Key: {{account.key}}</li>
-                        
-                    </ul>
-                    <ul class="list-unstyled"
-                        ng-switch-when="readmultisig">
-                        <li>Balance: {{balance.balance.balance / 100000.0| number:5}} mBTC</li>
-                        <li>Name: {{account.name}}</li>
-                        <li>Type: {{account.type}}</li>
-                        <li>Required: {{account.required}} / {{account.total}} keys</li>
-                        <li>Keys:
-                            <ul class="list-unstyled">
-                                <li ng-repeat="k in account.keys">{{k}}</li>
-                            </ul>
-                        </li>
-                        
-                    </ul>
+
+                    <!-- REGULAR ACCOUNT -->
+                    <dl ng-switch-when="regular" class="dl-horizontal">
+                      <dt>Type</dt>
+                      <dd>{{account.type}}</dd>
+                      <dt>Balance</dt>
+                      <dd>{{balance.balance.balance / 100000.0| number:5}} mBTC</dd>
+                      <dt>Public key</dt>
+                      <dd>
+                        <button ng-click  ="showKey(account.key)"
+                                type      ="button" 
+                                class     ="btn btn-default btn-xs">
+                                    <i class ="glyphicon glyphicon-lock"></i>
+                        </button>
+                      </dd>
+                    </dl>
+
+                    <!-- MULTISIGNATURE ACCOUNT -->
+                    <dl ng-switch-when="multisig" class="dl-horizontal">
+                      <dt>Type</dt>
+                      <dd>{{account.type}}</dd>
+                      <dt>Balance</dt>
+                      <dd>{{balance.balance.balance / 100000.0| number:5}} mBTC</dd>
+                      <dt>Required</dt>
+                      <dd>{{account.required}} of {{account.total}} keys</dd>
+                      <dt>Public keys</dt>
+                      <dd>
+                        <div class="btn-group btn-group-xs" role="group">
+                              <button ng-repeat ="k in account.keys"
+                                      ng-click  ="showKey(k)"
+                                      type      ="button" 
+                                      class     ="btn btn-default">
+                                      <i class ="glyphicon glyphicon-lock"></i>
+                              </button>
+                        </div>
+                      </dd>
+                    </dl>
+
+                    <!-- READ ONLY ACCOUNT -->
+                    <dl ng-switch-when="read" class="dl-horizontal">
+                      <dt>Type</dt>
+                      <dd>{{account.type}}</dd>
+                      <dt>Balance</dt>
+                      <dd>{{balance.balance.balance / 100000.0| number:5}} mBTC</dd>
+                      <dt>Public key</dt>
+                      <dd>
+                        <button ng-click  ="showKey(account.key)"
+                                type      ="button" 
+                                class     ="btn btn-default btn-xs">
+                                    <i class ="glyphicon glyphicon-lock"></i>
+                        </button>
+                      </dd>
+                    </dl>
+
+                    <!-- READ ONLY MULTISIGNATURE ACCOUNT -->
+                    <dl ng-switch-when="readmultisig" class="dl-horizontal">
+                      <dt>Type</dt>
+                      <dd>{{account.type}}</dd>
+                      <dt>Balance</dt>
+                      <dd>{{balance.balance.balance / 100000.0| number:5}} mBTC</dd>
+                      <dt>Required</dt>
+                      <dd>{{account.required}} of {{account.total}} keys</dd>
+                      <dt>Public keys</dt>
+                      <dd>
+                        <div class="btn-group btn-group-xs" role="group">
+                              <button ng-repeat ="k in account.keys"
+                                      ng-click  ="showKey(k)"
+                                      type      ="button" 
+                                      class     ="btn btn-default">
+                                      <i class ="glyphicon glyphicon-lock"></i>
+                              </button>
+                        </div>
+                      </dd>
+                    </dl>
+
               </div>
         </div>
       </td>

@@ -305,6 +305,9 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                     };
                     return false;
                 };
+                $scope.showKey = function (key) {
+                  alert(key);
+                };
                 $scope.$watchGroup(['aname','wname'], 
                     function(newValues, oldValues) {
                         $scope.getAccountDetails(newValues[0],newValues[1]);
