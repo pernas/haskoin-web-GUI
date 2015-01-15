@@ -17,7 +17,7 @@
                       <dd>{{balance.balance.balance / 100000.0| number:5}} mBTC</dd>
                       <dt>Public key</dt>
                       <dd>
-                        <button ng-click  ="showKey(account.key)"
+                        <button ng-click  ="showKeyModal(account.key)"
                                 type      ="button" 
                                 class     ="btn btn-default btn-xs">
                                     <i class ="glyphicon glyphicon-lock"></i>
@@ -37,7 +37,7 @@
                       <dd>
                         <div class="btn-group btn-group-xs" role="group">
                               <button ng-repeat ="k in account.keys"
-                                      ng-click  ="showKey(k)"
+                                      ng-click  ="showKeyModal(k)"
                                       type      ="button" 
                                       class     ="btn btn-default">
                                       <i class ="glyphicon glyphicon-lock"></i>
@@ -54,7 +54,7 @@
                       <dd>{{balance.balance.balance / 100000.0| number:5}} mBTC</dd>
                       <dt>Public key</dt>
                       <dd>
-                        <button ng-click  ="showKey(account.key)"
+                        <button ng-click  ="showKeyModal(account.key)"
                                 type      ="button" 
                                 class     ="btn btn-default btn-xs">
                                     <i class ="glyphicon glyphicon-lock"></i>
@@ -74,7 +74,7 @@
                       <dd>
                         <div class="btn-group btn-group-xs" role="group">
                               <button ng-repeat ="k in account.keys"
-                                      ng-click  ="showKey(k)"
+                                      ng-click  ="showKeyModal(k)"
                                       type      ="button" 
                                       class     ="btn btn-default">
                                       <i class ="glyphicon glyphicon-lock"></i>
@@ -87,17 +87,12 @@
         </div>
       </td>
     </tr>
-    <tr>
-      <td>
-        <add-keys-form wname="{{wname}}"
-                       aname="{{aname}}"
-                       ng-hide="!canIAddKeys(account)">
-        </add-keys-form>     
-      </td>
-    </tr>
-
-
-
   </tbody>
 </table>
 </div>
+<p>
+        <add-keys-form wname="{{wname}}"
+                       aname="{{aname}}"
+                       ng-hide="!canIAddKeys(account)">
+        </add-keys-form>  
+</p>

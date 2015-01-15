@@ -306,7 +306,7 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                     };
                     return false;
                 };
-                $scope.showKey = function (key) {
+                $scope.showKeyModal = function (key) {
                   alert(key);
                 };
                 $scope.$watchGroup(['aname','wname'], 
