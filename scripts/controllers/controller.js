@@ -414,13 +414,19 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
         };
     }])
 
+    .controller('showQRModalCtrl', ['$scope','address',
+       function($scope, address) { $scope.address = address;}
+    ])
+
     .directive('addresses', [function() {
         return {
             templateUrl: "scripts/views/addresses.html",
             restrict: 'E',
             controller: ['$scope',
                          '$route',
-                         'APIService', function($scope,$route,APIService){
+                         'APIService',
+                         'createDialog',
+                          function($scope,$route,APIService,createDialog){
                 
                 $scope.maxSize     = 5;   // pagination bar buttons
                 $scope.elemxpage   = 10;
@@ -463,6 +469,7 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                         }
                     );
                 };
+
                 $scope.createNewAddr = function (label) {          
                     var x    = {};
                     x.label  = label; 
@@ -477,6 +484,21 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                     $route.reload();
 
                 };
+
+                $scope.showQRModal = function (addr) {
+                  createDialog('scripts/views/modals/showQR.html', {
+                      id: 'bitcoin-qr-address-modal',
+                      title: 'Bitcoin address',
+                      backdrop: true,
+                      controller: 'showQRModalCtrl',
+                      footerTemplate: '<button class="btn btn-primary" ng-click="$modalSuccess()">{{$modalSuccessLabel}}</button>',
+                      css: { top: '100px', left: '0%', margin: '0 auto'}
+                    },
+                    // parameters for the modal
+                    { address: addr}
+                  );
+                };
+
                 $scope.$watchGroup(['aname','wname'], 
                     function(newValues, oldValues) {
                         $scope.getAddressesList(newValues[1],newValues[0]);

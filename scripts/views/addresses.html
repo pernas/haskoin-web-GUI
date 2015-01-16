@@ -55,18 +55,10 @@
                     </span>  
               </td>
               <td>
-                    <span ng-click="isCollapsed = !isCollapsed">
+                <span ng-click = "showQRModal(ad.address.address)"
+                         style = "cursor: pointer;">
                             {{ad.address.address}}
-                    </span>
-                    <div collapse="!isCollapsed">
-                      <!-- <div class="well well-lg"> -->
-                      
-                        <qrcode data = {{ad.address.address|addrForQR}}
-                                size = "100">
-                        </qrcode>
-
-                      <!-- </div>  -->
-                    </div>
+                </span>
               </td> 
               <td class="text-right">
                 <span> {{ad.finalbalance.balance / 100000.0 | number:5}}</span> 
