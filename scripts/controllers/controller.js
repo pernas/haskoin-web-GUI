@@ -193,6 +193,7 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
           transactions: $resource('/wallets/:wname/accounts/:aname/txs', 
                                   { wname:'@wname', aname:'@aname'}
                         ),
+          node:         $resource('/node'),
           transaction:  $resource('/wallets/:wname/accounts/:aname/txs/:txhash', 
                                   { wname:'@wname'
                                   , aname:'@aname'
@@ -298,22 +299,32 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
               function($scope,APIService,createDialog){
 
                 // DATE PICKER ///////////////////
-                $scope.dt = null;
+                $scope.dt = new Date();
                 $scope.toggleMax = function() {
                   $scope.maxDate = $scope.maxDate ? null : new Date();
                 };
                 $scope.toggleMax();
+
                 $scope.open = function($event) {
-                    $event.preventDefault();
-                    $event.stopPropagation();
-                    $scope.opened = true;
-                };                
+                  $event.preventDefault();
+                  $event.stopPropagation();
+                  $scope.opened = true;
+                };
                 $scope.dateOptions = {
                   formatYear: 'yy',
                   startingDay: 1
                 };
                 $scope.format = 'dd-MMMM-yyyy';
-                //////////////////////////////
+                // ALERTS  ////////////////////
+                $scope.alerts = [];
+                $scope.addAlert = function(t,m) {
+                    $scope.alerts = [];
+                    $scope.alerts.push({type: t, msg: m});
+                };
+                $scope.closeAlert = function(index) {
+                    $scope.alerts.splice(index, 1);
+                };
+                ///////////////////////////////
 
                 $scope.getAccountDetails = function(accName, walName) {
                     if (accName) {
@@ -339,6 +350,22 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                       };
                     };
                     return false;
+                };
+                $scope.submitRescan = function (date) {
+                  $scope.alerts = [];
+                  var rescan = {};
+                  rescan.type = "rescan";
+                  rescan.timestamp = Math.floor(date / 1000); // unix timestamp
+                  APIService.node.save(rescan,
+                      function (successResult) {
+                          $scope.alerts = [];
+                          $scope.addAlert('success','Blockchain rescan started correctly');
+                      },
+                      function (errorResult) {
+                          $scope.alerts = [];
+                          $scope.addAlert('danger',errorResult.data.errors);
+                      }
+                  );
                 };
                 $scope.showKeyModal = function (key) {
                   createDialog('scripts/views/modals/showKey.html', {
