@@ -567,7 +567,10 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
         return {
             templateUrl: "scripts/views/newAccountForm.html",
             restrict: 'E',
-            controller: ['$scope','APIService', function($scope,APIService){
+            controller: ['$scope'
+                        ,'APIService'
+                        ,'$location' 
+                        , function($scope,APIService,$location){
 
                 $scope.alerts = [];
                 $scope.addAlert = function(t,m) {
@@ -594,6 +597,10 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                                     function (successResult) {
                                         $scope.alerts = [];
                                         $scope.addAlert('success',newaccount);
+                                        $location.path('/wallets/' 
+                                                       +newaccount.wallet 
+                                                       +'/accounts/' 
+                                                       +newaccount.name);
                                     },
                                     function (errorResult) {
                                         $scope.alerts = [];
