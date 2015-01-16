@@ -6,3 +6,9 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.modal-body p {
+    word-wrap: break-word;
+}
+.alert p {
+    word-wrap: break-word;
+}

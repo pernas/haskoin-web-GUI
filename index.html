@@ -8,40 +8,35 @@
         <!-- <link rel="stylesheet" href="/static/node_modules/bootstrap/dist/css/bootstrap-theme.min.css" /> --> 
         <!-- <link rel="stylesheet" href="/static/css/bootstrap-slate.min.css" /> -->
         <!-- <link rel="stylesheet" href="/static/css/bootstrap-simplex.min.css" /> -->
-        <!-- <link rel="stylesheet" href="/static/css/bootstrap-spacelab.min.css" /> -->
+        <link rel="stylesheet" href="/static/css/bootstrap-spacelab.min.css" />
         <!-- <link rel="stylesheet" href="/static/css/bootstrap-cyborg.min.css" /> -->
         <!-- <link rel="stylesheet" href="/static/css/bootstrap-darkly.min.css" /> -->
         <!-- <link rel="stylesheet" href="/static/css/bootstrap-journal.min.css" /> -->
         <!-- <link rel="stylesheet" href="/static/css/bootstrap-flatly.min.css" /> -->
         <!-- <link rel="stylesheet" href="/static/css/bootstrap-lumen.min.css" /> -->
-        <link rel="stylesheet" href="/static/css/bootstrap-paper.min.css" />
+<!--         <link rel="stylesheet" href="/static/css/bootstrap-paper.min.css" /> -->
         <!-- <link rel="stylesheet" href="/static/css/bootstrap-readable.min.css" /> -->
         <!-- <link rel="stylesheet" href="/static/css/bootstrap-sandstone.min.css" /> -->
         <!-- <link rel="stylesheet" href="/static/css/bootstrap-yeti.min.css" /> -->
         <!-- <link rel="stylesheet" href="/static/css/bootstrap-united.min.css" /> -->
         <!-- <link rel="stylesheet" href="/static/css/bootstrap-superhero.min.css" /> -->
+<!--         <link rel="stylesheet" href="/static/css/bootstrap-cosmo.min.css" /> -->
+<!--         <link rel="stylesheet" href="/static/css/bootstrap-cerulean.min.css" /> -->
     </head>
 
     <body ng-controller="WalletCtrl as wctrl" >
 
     <div class="container">
-<!--         
-        <div class="jumbotron">
-            <img width='50%' 
-                 height='70%' 
-                 style="margin:0px auto;display:block"
-                 src="/static/images/haskoin.png">
-        </div> 
--->
         <div ng-view></div>
+        <div id="footer">
+          <div class="container">
+            <hr/>
+            <p class="muted credit">Powered by <a href="http://haskoin.com">haskoin</a></p>
+          </div>
+        </div>
     </div>
 
-    <div id="footer">
-      <div class="container">
-        <hr/>
-        <p class="muted credit">haskoin 2015</p>
-      </div>
-    </div>
+
 
     <!-- ------------------------------------------------------------------- -->
     <script 

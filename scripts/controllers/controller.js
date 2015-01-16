@@ -272,6 +272,10 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
         };
     }])
 
+    .controller('showKeyModalCtrl', ['$scope','xPubKey',
+       function($scope, xPubKey) { $scope.xPubKey = xPubKey;}
+    ])
+
     .directive('account', [function() {
         return {
             templateUrl: "scripts/views/accountInfo.html",
@@ -307,7 +311,17 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                     return false;
                 };
                 $scope.showKeyModal = function (key) {
-                  alert(key);
+                  createDialog('scripts/views/modals/showKey.html', {
+                      id: 'showKey',
+                      title: 'Extended public key',
+                      backdrop: true,
+                      controller: 'showKeyModalCtrl',
+                      footerTemplate: '<button class="btn btn-primary" ng-click="$modalSuccess()">{{$modalSuccessLabel}}</button>',
+                      css: { top: '100px', left: '0%', margin: '0 auto'}
+                    },
+                    // parameters for the modal
+                    { xPubKey: key}
+                  );
                 };
                 $scope.$watchGroup(['aname','wname'], 
                     function(newValues, oldValues) {

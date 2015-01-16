@@ -46,16 +46,16 @@
               </button>
             </div>
 
-        </form>
-
-        <div>
-          <alert ng-repeat="alert in alerts" 
-                 type="{{alert.type}}" 
-                 close="closeAlert($index)">{{alert.msg}}
-          </alert>
-        </div>                
+        </form>              
       </td>
     </tr>
   </tbody>
 </table>
 </div>
+
+<div>
+  <alert ng-repeat="alert in alerts" 
+         type="{{alert.type}}">
+         <p>{{alert.msg}}</p>
+  </alert>
+</div>  

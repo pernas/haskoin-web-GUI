@@ -29,15 +29,14 @@
               </div>
 
           </form>
-
-          <div>
-            <alert ng-repeat="alert in alerts" 
-                   type="{{alert.type}}" 
-                   close="closeAlert($index)">{{alert.msg}}
-            </alert>
-          </div>
       </td>
     </tr>
   </tbody>
 </table>
 </div>
+
+<alert ng-repeat="alert in alerts" 
+       type="{{alert.type}}" 
+       close="closeAlert($index)">
+       <p>{{alert.msg}}</p>
+</alert>

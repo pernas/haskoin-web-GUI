@@ -35,6 +35,7 @@
 <div>
   <alert ng-repeat = "alert in alerts" 
          type      = "{{alert.type}}" 
-         close     = "closeAlert($index)">{{alert.msg}}
+         close     = "closeAlert($index)">
+         <p>{{alert.msg}}</p>
   </alert>
 </div>
