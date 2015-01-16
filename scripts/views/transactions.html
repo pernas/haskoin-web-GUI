@@ -24,46 +24,21 @@
                   {{tx.confirmationdate * 1000 | date:'dd-MM-yyyy (HH:mm)'}}
                 </span>  
               </td>
+              
               <td ng-show="isProposition(tx)">
                 <span ng-show = "tx.receiveddate"> 
                   {{tx.receiveddate * 1000 | date:'dd-MM-yyyy (HH:mm)'}}
                 </span>  
               </td>
+
               <td>
-                    <span ng-click="isCollapsed = !isCollapsed">
-                      {{tx.txid}}
-                    </span>
-                    <div collapse="!isCollapsed">
-                      <hr>
-<!--                      <ul>
-                          <li>Confidence: {{tx.confidence}} </li>
-                          <li>isCoinbase: {{tx.isCoinbase}} </li>
-                          <li>Confirmations: {{tx.confirmations}} </li>
-                          </ul> 
--->
-                      <table class="table table-striped table-condensed">
+                <span ng-click = "showTxDetailsModal(tx)"
+                         style = "cursor: pointer;">
+                            {{tx.txid}}
+                </span>
+              </td> 
 
-                        <caption><h4> Share: {{tx.tx}} </h4></caption>
 
-                        <thead>
-                          <tr>
-                            <th>Label</th>
-                            <th>Address</th>
-                            <!-- <th>Local address</th> -->
-                          </tr>
-                        </thead>
-
-                        <tbody>
-                          <tr ng-repeat="r in tx.recipients">
-                            <td> {{r.label}}   </td>
-                            <td> {{r.address}} </td>
-                            <!-- <td> {{r.islocal}} </td>   -->
-                          </tr>
-                        </tbody> 
-
-                      </table>
-                    </div>
-              </td>
               <td class="text-right">
                 <span ng-show="isTransaction(tx)"> {{tx.confirmations}} </span>
                 <span ng-show="isProposition(tx)"> Proposition </span>

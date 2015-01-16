@@ -1,0 +1,67 @@
+<form ng-show="isProposition"
+      role="form"
+      name="signTxForm" 
+      ng-submit="submitSign()">
+  <div class="form-group">
+    <button type="submit"
+            class="btn btn-default" 
+            ng-disabled="signTxForm.$invalid">
+            Sign Proposition
+    </button>
+  </div>
+</form>
+
+<dl class="dl-horizontal">
+  <dt>Amount</dt>
+  <dd class="text-overflow">
+    <p>{{transaction.value / 100000.0 | number:5}} </p>
+  </dd>
+
+  <dt>Date</dt>
+  <dd class="text-overflow">
+    <p>{{transaction.receiveddate * 1000 | date:'dd-MM-yyyy (HH:mm:ss)'}} </p>
+  </dd>
+                   
+  <dt ng-hide="isProposition">Confirmations</dt>
+  <dd class="text-overflow"
+      ng-hide="isProposition"><p>{{transaction.confirmations}} </p></dd>
+
+  <dt ng-hide="isProposition">Confidence</dt>
+  <dd class="text-overflow"
+      ng-hide="isProposition"><p>{{transaction.confidence}}</p></dd>
+
+  <dt>Tx Id</dt>
+  <dd class="text-overflow"><p>{{transaction.txid}}</p></dd>
+<!-- 
+  <dt>Coinbase</dt>
+  <dd class="text-overflow"><p>{{transaction.isCoinbase}}</p></dd>
+ -->
+<!--  
+  <dt>Encoded tx</dt>
+  <dd class="text-overflow"><p>{{transaction.tx}} </p></dd>
+ -->
+</dl>
+
+<table class="table table-striped table-condensed">
+  <caption> Recipients </caption>
+    <thead>
+      <tr>
+        <th>Label</th>
+        <th>Address</th>
+        <th>Local address</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="r in transaction.recipients">
+        <td> {{r.label}}   </td>
+        <td> {{r.address}} </td>
+        <td> {{r.islocal}} </td>  
+      </tr>
+    </tbody> 
+</table>
+
+<alert ng-repeat="alert in alerts" 
+       type="{{alert.type}}" 
+       close="closeAlert($index)">
+       <p>{{alert.msg}}</p>
+</alert>

@@ -382,11 +382,56 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
         };
     }])
 
+    .controller('showTxDetailsModalCtrl', ['$scope'
+                                          ,'transaction'
+                                          ,'data'
+                                          ,'APIService'
+                                          ,'$route'
+       ,function($scope, transaction, data, APIService, $route) { 
+            $scope.transaction = transaction;
+            $scope.wallet = data.wallet;
+            $scope.account = data.account;
+            $scope.isProposition = data.isProposition;
+
+            $scope.alerts = [];
+            $scope.addAlert = function(t,m) {
+                $scope.alerts.push({type: t, msg: m});
+            };
+            $scope.closeAlert = function(index) {
+                $scope.alerts.splice(index, 1);
+            };
+            $scope.details = {};
+            $scope.details.type = "sign";
+            $scope.details.final = false;
+            $scope.details.tx = transaction.tx;
+
+            $scope.submitSign = function () {
+                
+                var newTx = new APIService.transactions($scope.details);
+                newTx.$save({aname:$scope.account, wname:$scope.wallet},
+                        function (successResult) {
+                            $scope.alerts = [];
+                            $scope.addAlert('success', 'Transaction signed');
+                            $route.reload();                     
+                        },
+                        function (errorResult) {
+                            $scope.alerts = [];
+                            $scope.addAlert('danger', errorResult.data.errors);    
+                        }
+                );
+            };
+
+      }
+    ])
+
     .directive('transactions', [function() {
         return {
             templateUrl: "scripts/views/transactions.html",
             restrict: 'E',
-            controller: ['$scope','APIService', function($scope,APIService){
+            controller: ['$scope'
+                        ,'APIService'
+                        ,'createDialog'
+                        , function($scope,APIService,createDialog){
 
                 $scope.maxSize     = 5;   // pagination bar buttons
                 $scope.elemxpage   = 10;
@@ -417,6 +462,32 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                             }
                         );
                     };
+                };
+                $scope.showTxDetailsModal = function (tx) {
+                  var titleModal = "";
+                  if ($scope.isProposition(tx)) {
+                    titleModal = "Proposition details";
+                  }
+                  else{
+                    titleModal = "Transaction details"
+                  };
+                  createDialog('scripts/views/modals/showTx.html', {
+                      id: 'bitcoin-transaction-modal',
+                      title: titleModal,
+                      backdrop: true,
+                      controller: 'showTxDetailsModalCtrl',
+                      footerTemplate: '<button class="btn btn-primary" ng-click="$modalSuccess()">{{$modalSuccessLabel}}</button>',
+                      css: { top: '100px', left: '0%', margin: '0 auto'}
+                    },
+                    // parameters for the modal
+                    { transaction: tx,
+                      data: {
+                        wallet: $scope.wname,
+                        account: $scope.aname,
+                        isProposition: $scope.isProposition(tx)
+                      } 
+                    }
+                  );
                 };
                 $scope.$watchGroup(['aname','wname'], 
                     function(newValues, oldValues) {
