@@ -69,6 +69,12 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                          internal=false></addresses>',
               controller: 'AddressListCtrl as AdLC'
           })
+          .when('/wallets/:walletName/accounts/:accountName/change',{
+              template: '<navigation-bar></navigation-bar><addresses \
+                         wname="{{ChLC.wname}}" aname="{{ChLC.aname}}" \
+                         internal=true></addresses>',
+              controller: 'ChangeListCtrl as ChLC'
+          })
           .when('/wallets/:walletName/accounts/:accountName/send',{
               template: '<navigation-bar></navigation-bar>\
                          <send-form wname="{{SFC.wname}}"\
@@ -128,6 +134,12 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
         self.aname = $routeParams.accountName;
     }])
     .controller('AddressListCtrl', ['$routeParams',
+      function($routeParams){
+        var self = this;
+        self.wname = $routeParams.walletName;
+        self.aname = $routeParams.accountName;
+    }])
+    .controller('ChangeListCtrl', ['$routeParams',
       function($routeParams){
         var self = this;
         self.wname = $routeParams.walletName;

@@ -3,38 +3,25 @@
               table-striped 
               table-hover
               table-condensed">
-  <caption><h3> Addresses 
-<!-- 
-        <form role="form"
-              class="form-inline pull-right"
-              name="newAddressForm" 
-              ng-submit="createNewAddr(label.label)">
-            <div class="form-group">
-              <input 
-                     class       = "form-control" 
-                     type        = "text"
-                     placeholder = "Label"
-                     ng-model    = "label.label">
-              </input>
-            </div>
-            <button type="submit" class="btn btn-default">
-              New Address
-            </button>
-        </form>
--->
-        </h3>
-
+  <caption>
+    <h3 ng-hide="{{internal}}"> Addresses </h3>
+    <h3 ng-show="{{internal}}"> Change Addresses </h3>
   </caption>
+
   <thead>
-    <tr>
+    <tr ng-hide="{{internal}}">
       <th class="col-xs-3 col-sm-3 col-md-3 col-lg-3">Label</th>
       <th class="col-xs-7 col-sm-7 col-md-7 col-lg-7">Address</th>
       <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2 text-right">mBTC</th>
     </tr>
+    <tr ng-show="{{internal}}">
+      <th class="col-xs-9 col-sm-9 col-md-9 col-lg-9">Address</th>
+      <th class="col-xs-3 col-sm-3 col-md-3 col-lg-3 text-right">mBTC</th>
+    </tr>
   </thead>
   <tbody>
             <tr ng-repeat="ad in infoPage.addresspage">  
-              <td>
+              <td ng-hide="{{internal}}">
                     <span ng-hide="ad.address.editorEnabled">
                       <span ng-hide  ="ad.address.label"
                             ng-click ="ad.address.editorEnabled=!ad.address.editorEnabled"

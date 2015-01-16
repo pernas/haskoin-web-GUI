@@ -40,11 +40,26 @@
             Send
           </a> 
         </li>
+<!--         
         <li ng-show="account"
             ng-class="{ active: isActive('/wallets/{{wallet}}/accounts/{{account}}/receive')}"> 
           <a ng-href="#/wallets/{{wallet}}/accounts/{{account}}/receive">
             Receive
           </a> 
+        </li>
+ -->
+        <li ng-show = "account" 
+            class   = "dropdown"
+            ng-class="{ active: isActive('/wallets/{{wallet}}/accounts/{{account}}/receive') ||
+                                isActive('/wallets/{{wallet}}/accounts/{{account}}/change') }">
+          <a href          = "#" 
+             class         = "dropdown-toggle" 
+             role          = "button" 
+             aria-expanded = "false"> Addresses <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="#/wallets/{{wallet}}/accounts/{{account}}/receive">Receive</a></li>
+            <li><a href="#/wallets/{{wallet}}/accounts/{{account}}/change">Change</a></li>
+          </ul>
         </li>
 <!--         
         <li ng-show="account"
