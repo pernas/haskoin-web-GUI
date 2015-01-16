@@ -28,21 +28,34 @@
                     </dl>
 
                     <!-- MULTISIGNATURE ACCOUNT -->
-                    <dl ng-switch-when="multisig" class="dl-horizontal">
+                    <dl ng-switch-when = "multisig" class = "dl-horizontal">
                       <dt>Type</dt>
                       <dd>{{account.type}}</dd>
                       <dt>Balance</dt>
                       <dd>{{balance.balance.balance / 100000.0| number:5}} mBTC</dd>
                       <dt>Required</dt>
                       <dd>{{account.required}} of {{account.total}} keys</dd>
-                      <dt>Public keys</dt>
+                      <dt>Your public key</dt>
                       <dd>
                         <div class="btn-group btn-group-xs" role="group">
-                              <button ng-repeat ="k in account.keys"
-                                      ng-click  ="showKeyModal(k)"
-                                      type      ="button" 
-                                      class     ="btn btn-default">
-                                      <i class ="glyphicon glyphicon-lock"></i>
+                              <button ng-repeat = "k in account.keys"
+                                      ng-if = "$first"
+                                      ng-click  = "showKeyModal(k)"
+                                      type      = "button" 
+                                      class     = "btn btn-default">
+                                      <i class  = "glyphicon glyphicon-lock"></i>
+                              </button>
+                        </div>
+                      </dd>
+                      <dt>Other public keys</dt>
+                      <dd>
+                        <div class="btn-group btn-group-xs" role="group">
+                              <button ng-repeat = "k in account.keys"
+                                      ng-if = "!$first"
+                                      ng-click  = "showKeyModal(k)"
+                                      type      = "button" 
+                                      class     = "btn btn-default">
+                                      <i class  = "glyphicon glyphicon-lock"></i>
                               </button>
                         </div>
                       </dd>
