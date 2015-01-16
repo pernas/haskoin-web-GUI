@@ -24,6 +24,10 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
               template: '<navigation-bar></navigation-bar>\
                          <new-account-form></new-account-form>'
           })
+          .when('/administration',{
+              template: '<navigation-bar></navigation-bar>\
+                         <rescan-form></rescan-form>'
+          })
           .when('/wallets',{
               template: '<navigation-bar></navigation-bar>\
                          <wallets wallets="WLC.wallets"></wallets>',
@@ -296,35 +300,7 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
             controller: ['$scope',
                          'APIService',
                          'createDialog',
-              function($scope,APIService,createDialog){
-
-                // DATE PICKER ///////////////////
-                $scope.dt = new Date();
-                $scope.toggleMax = function() {
-                  $scope.maxDate = $scope.maxDate ? null : new Date();
-                };
-                $scope.toggleMax();
-
-                $scope.open = function($event) {
-                  $event.preventDefault();
-                  $event.stopPropagation();
-                  $scope.opened = true;
-                };
-                $scope.dateOptions = {
-                  formatYear: 'yy',
-                  startingDay: 1
-                };
-                $scope.format = 'dd-MMMM-yyyy';
-                // ALERTS  ////////////////////
-                $scope.alerts = [];
-                $scope.addAlert = function(t,m) {
-                    $scope.alerts = [];
-                    $scope.alerts.push({type: t, msg: m});
-                };
-                $scope.closeAlert = function(index) {
-                    $scope.alerts.splice(index, 1);
-                };
-                ///////////////////////////////
+              function($scope, APIService, createDialog){
 
                 $scope.getAccountDetails = function(accName, walName) {
                     if (accName) {
@@ -350,22 +326,6 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                       };
                     };
                     return false;
-                };
-                $scope.submitRescan = function (date) {
-                  $scope.alerts = [];
-                  var rescan = {};
-                  rescan.type = "rescan";
-                  rescan.timestamp = Math.floor(date / 1000); // unix timestamp
-                  APIService.node.save(rescan,
-                      function (successResult) {
-                          $scope.alerts = [];
-                          $scope.addAlert('success','Blockchain rescan started correctly');
-                      },
-                      function (errorResult) {
-                          $scope.alerts = [];
-                          $scope.addAlert('danger',errorResult.data.errors);
-                      }
-                  );
                 };
                 $scope.showKeyModal = function (key) {
                   createDialog('scripts/views/modals/showKey.html', {
@@ -552,7 +512,7 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                       css: { top: '100px', left: '0%', margin: '0 auto'}
                     },
                     // parameters for the modal
-                    { address: addr}
+                    { address: addr }
                   );
                 };
 
@@ -863,6 +823,68 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
             }
         };
     }])
+
+.directive('rescanForm', [function() {
+        return {
+            templateUrl: "scripts/views/rescanForm.html",
+            restrict: 'E',
+            controller: ['$scope',
+                         'APIService',
+              function($scope, APIService){
+
+                // DATE PICKER ///////////////////
+                $scope.dt = null;
+                $scope.toggleMax = function() {
+                  $scope.maxDate = $scope.maxDate ? null : new Date();
+                };
+                $scope.toggleMax();
+                $scope.open = function($event) {
+                  $event.preventDefault();
+                  $event.stopPropagation();
+                  $scope.opened = true;
+                };
+                $scope.dateOptions = {
+                  formatYear: 'yy',
+                  startingDay: 1
+                };
+                $scope.format = 'dd-MMMM-yyyy';
+
+                // ALERTS  ////////////////////
+                $scope.alerts = [];
+                $scope.addAlert = function(t,m) {
+                    $scope.alerts = [];
+                    $scope.alerts.push({type: t, msg: m});
+                };
+                $scope.closeAlert = function(index) {
+                    $scope.alerts.splice(index, 1);
+                };
+                ///////////////////////////////
+
+                $scope.submitRescan = function (date) {
+                  $scope.alerts = [];
+                  var rescan = {};
+                  rescan.type = "rescan";
+                  if (date) {
+                    // unix timestamp
+                    rescan.timestamp = Math.floor(date / 1000);
+                  };
+                  APIService.node.save(rescan,
+                      function (successResult) {
+                          $scope.alerts = [];
+                          var rescanDate = new Date(successResult.timestamp * 1000);
+                          $scope.addAlert('success','Blockchain rescan since: ' + rescanDate);
+                      },
+                      function (errorResult) {
+                          $scope.alerts = [];
+                          $scope.addAlert('danger',errorResult.data.errors);
+                      }
+                  );
+                };
+            }],
+            scope: {}
+        };
+    }])
+
 
     .directive('addKeysForm', [function() {
         return {

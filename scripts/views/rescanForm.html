@@ -1,0 +1,47 @@
+<div class="panel panel-default">
+<table class="table       
+              table-condensed">
+  <caption>
+    <h3> Administration </h3>
+  </caption>
+</table>
+</div>
+
+      <div class="row">
+        <div class="col-md-6">
+            <input               type = "hidden" 
+                                class = "form-control" 
+                     datepicker-popup = "{{format}}" 
+                             ng-model = "dt" 
+                              is-open = "opened" 
+                             max-date = "maxDate" 
+                   datepicker-options = "dateOptions" 
+                          ng-required = "true" 
+                           close-text = "Close" />
+            <p class="input-group">
+              <span class="input-group-btn">
+                <button type="button" 
+                        class="btn btn-default" 
+                        ng-click="open($event)">
+                        <i class="glyphicon glyphicon-calendar"></i>
+                </button>
+              </span>
+              <span class="form-control input-group"> {{dt | date:'dd-MMMM-yyyy' }}</span>
+              <span class="input-group-btn">
+                <button type="submit" 
+                        class="btn btn-default" 
+                        ng-click="submitRescan(dt)">
+                  Rescan
+                </button>
+              </span>
+            </p>
+        </div>
+      </div>  
+      
+<div>
+    <alert ng-repeat = "alert in alerts" 
+           type      = "{{alert.type}}" 
+           close     = "closeAlert($index)">
+           <p>{{alert.msg}}</p>
+    </alert>
+</div>
