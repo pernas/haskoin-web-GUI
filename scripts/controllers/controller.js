@@ -805,8 +805,8 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
             templateUrl: "scripts/views/addKeys.html",
             restrict: 'E',
 
-            controller: ['$scope','APIService', 
-              function($scope,APIService){
+            controller: ['$scope','APIService','$route', 
+              function($scope,APIService,$route){
                 $scope.newKeys = [];
                 $scope.alerts = [];
 
@@ -824,13 +824,15 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                     $scope.alerts = [];
                     $scope.newKeys = $scope.newKeys.filter(
                         function(item, index, array){ return item;});
-                    APIService.addKeys.save({wname:$scope.wname, aname:$scope.aname }, 
+                    APIService.addKeys.save(
+                        {wname:$scope.wname, aname:$scope.aname }, 
                         $scope.newKeys,
                         function (successResult) {
                             $scope.alerts = [];
                             $scope.addAlert('success','Keys added correctly');
                             $scope.newKeys = [];
                             $scope.getAccountDetails($scope.aname, $scope.wname);
+                            $route.reload();
                         },
                         function (errorResult) {
                             $scope.alerts = [];
