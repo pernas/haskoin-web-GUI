@@ -296,7 +296,25 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                          'APIService',
                          'createDialog',
               function($scope,APIService,createDialog){
-          
+
+                // DATE PICKER ///////////////////
+                $scope.dt = null;
+                $scope.toggleMax = function() {
+                  $scope.maxDate = $scope.maxDate ? null : new Date();
+                };
+                $scope.toggleMax();
+                $scope.open = function($event) {
+                    $event.preventDefault();
+                    $event.stopPropagation();
+                    $scope.opened = true;
+                };                
+                $scope.dateOptions = {
+                  formatYear: 'yy',
+                  startingDay: 1
+                };
+                $scope.format = 'dd-MMMM-yyyy';
+                //////////////////////////////
+
                 $scope.getAccountDetails = function(accName, walName) {
                     if (accName) {
                         $scope.account = APIService.accounts.get(
