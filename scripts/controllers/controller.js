@@ -405,8 +405,16 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
             $scope.details.final = false;
             $scope.details.tx = transaction.tx;
 
-            $scope.submitSign = function () {
-                
+            $scope.shellTx = APIService.transaction.get(
+                {
+                     wname:       $scope.wallet
+                    ,aname:       $scope.account
+                    ,txhash:      $scope.transaction.txid
+                    ,proposition: $scope.isProposition
+                }
+            );
+
+            $scope.submitSign = function () {            
                 var newTx = new APIService.transactions($scope.details);
                 newTx.$save({aname:$scope.account, wname:$scope.wallet},
                         function (successResult) {
@@ -420,6 +428,8 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                         }
                 );
             };
+
+
 
       }
     ])

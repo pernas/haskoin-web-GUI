@@ -94,11 +94,13 @@
           <ul class="dropdown-menu" role="menu">
             <li><a href="#/wallets/{{wallet}}/accounts/{{account}}/transactions">List</a></li>
             <li class="divider"></li>
+<!--             
             <li ng-class="{ disabled: !isMultisig()}">
               <a href="#/wallets/{{wallet}}/accounts/{{account}}/signTx">
                 Sign
               </a>
             </li>
+ -->
             <li ng-class="{ disabled: !isMultisig()}">
               <a href="#/wallets/{{wallet}}/accounts/{{account}}/importTx">
                 Import

@@ -12,3 +12,13 @@
 .alert p {
     word-wrap: break-word;
 }
+.modal .modal-body {
+    max-height: 420px;
+    overflow-y: auto;
+}
+.truncate {
+  width: 250px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
