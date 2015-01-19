@@ -58,4 +58,16 @@ edit ~/.hw/testnet/hw.yaml
 cd .hw/testnet
 rm -rf html
 git clone https://github.com/pernas/haskoin-web-GUI.git html
+``
+
+### Run
+
+```sh
+hw start -d
+```
+
+### Access to GUI
+
+```
+http://localhost:18555/static/index.html
 ```
