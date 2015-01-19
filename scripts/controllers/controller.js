@@ -552,7 +552,12 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                         );           
                     };
                 };
-
+                $scope.hola = function (nom) {
+                  return "hola";
+                };
+                $scope.txCount = function (addr) {
+                  return addr.fundingtxs.length + addr.spendingtxs.length;
+                };
                 $scope.submitLabel = function (addr) {
                     addr.editorEnabled = !addr.editorEnabled;
                     var x    = {};

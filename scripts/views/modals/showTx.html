@@ -8,6 +8,13 @@
             ng-disabled="signTxForm.$invalid">
             Sign
     </button>
+    <span>
+      <alert ng-repeat="alert in alerts" 
+       type="{{alert.type}}" 
+       close="closeAlert($index)">
+       <p>{{alert.msg}}</p>
+      </alert>
+    </span>
   </div>
 </form>
 
@@ -66,9 +73,3 @@
       </tr>
     </tbody> 
 </table>
-
-<alert ng-repeat="alert in alerts" 
-       type="{{alert.type}}" 
-       close="closeAlert($index)">
-       <p>{{alert.msg}}</p>
-</alert>
