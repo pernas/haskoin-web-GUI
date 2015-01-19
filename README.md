@@ -49,6 +49,7 @@ Edit the config file.
 ```sh
 edit ~/.hw/testnet/hw.yaml
 ```
+
 - delete token: ... line
 - delete secret: ... line
 
@@ -58,7 +59,7 @@ edit ~/.hw/testnet/hw.yaml
 cd .hw/testnet
 rm -rf html
 git clone https://github.com/pernas/haskoin-web-GUI.git html
-``
+```
 
 ### Run
 
@@ -67,6 +68,8 @@ hw start -d
 ```
 
 ### Access to GUI
+
+Open your navigation
 
 ```
 http://localhost:18555/static/index.html
