@@ -1,10 +1,10 @@
-# Haskoin Wallet GUI Demo
+# Haskoin Wallet GUI
 
 Demo of a Web graphic user interface to manage [haskoin-wallet](https://github.com/haskoin/haskoin-wallet) with BIP32 and multisig support.
 
 ## Features
 
-This package provides a web user interface for a SPV (simple payment verification) wallet implementation. At the moment, it is not meant to be used as a web wallet service. It is not using an authenticated [API](https://github.com/haskoin/haskoin-wallet/blob/a28ff39c6e8d04a9ae5439f3c63995ed6285b81d/docs/haskoin-api.markdown) yet. You can use it as a local graphic user interface for haskoin wallet. A live demo over the testnet is running [here](http://wallet.pernas.cat).  
+This package provides a web user interface for a SPV (simple payment verification) wallet implementation. At the moment, it is not meant to be used as a web wallet service. It is not using an authenticated [API](https://github.com/haskoin/haskoin-wallet/blob/a28ff39c6e8d04a9ae5439f3c63995ed6285b81d/docs/haskoin-api.markdown) yet. You can use it as a local graphical user interface for haskoin wallet. A live demo over the testnet is running [here](http://wallet.pernas.cat).  
 
 ## Installing
 
