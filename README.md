@@ -69,7 +69,7 @@ hw start -d
 
 ### Access to GUI
 
-Open your navigation
+Open your browser
 
 ```
 http://localhost:18555/static/index.html
