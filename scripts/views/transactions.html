@@ -15,8 +15,6 @@
     </tr>
   </thead>
   <tbody>
-
-
             <tr ng-repeat="tx in infoPage.txpage" 
                 ng-class="{ warning: isProposition(tx)}">  
               <td ng-show="isTransaction(tx)">
@@ -47,7 +45,6 @@
                 <span> {{tx.value / 100000.0 | number:5}} </span> 
               </td>
             </tr>
-
   </tbody>
 </table>
 </div>

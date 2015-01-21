@@ -1,222 +1,4 @@
-angular.module('HaskoinApp', ['monospaced.qrcode'
-                             ,'ngResource'
-                             ,'ui.bootstrap'
-                             ,'ngRoute'
-                             ,'fundoo.services'])
-    ////////////////////////////////////////////////////////////////////////////
-    // CONFIG ROUTES
-    ////////////////////////////////////////////////////////////////////////////
-
-    .config(['$routeProvider', 
-      function($routeProvider) {
-
-        $routeProvider
-          .when('/',{
-              redirectTo: '/wallets'
-              // template: '<navigation-bar></navigation-bar>\
-              //            <h2>Welcome to Haskoin wallet</h2>'
-          })
-          .when('/new-wallet',{
-              template: '<navigation-bar></navigation-bar>\
-                         <new-wallet-form></new-wallet-form>'
-          })
-          .when('/new-account',{
-              template: '<navigation-bar></navigation-bar>\
-                         <new-account-form></new-account-form>'
-          })
-          .when('/administration',{
-              template: '<navigation-bar></navigation-bar>\
-                         <rescan-form></rescan-form>'
-          })
-          .when('/wallets',{
-              template: '<navigation-bar></navigation-bar>\
-                         <wallets wallets="WLC.wallets"></wallets>',
-              controller: 'WalletListCtrl as WLC',
-              resolve:{
-                walletsPromise: [ 'APIService',
-                    function (APIService) {
-                      var walletsData = APIService.wallets.query();
-                      return walletsData.$promise;
-                    }]
-              }
-          })
-          .when('/wallets/:walletName/accounts',{
-              template: '<navigation-bar></navigation-bar>\
-                         <accounts wallet="{{ALC.wname}}" accounts="ALC.accts">\
-                         </accounts>',
-              controller: 'AccountListCtrl as ALC',
-              resolve:{
-                accountsPromise: [ 'APIService','$route',
-                    function (APIService, $route) {
-                      var walletName = $route.current.params.walletName;
-                      var aData = APIService.accounts.query({wname:walletName});
-                      return aData.$promise;
-                    }]
-              }
-          })
-          .when('/wallets/:walletName/accounts/:accountName',{
-              template: '<navigation-bar></navigation-bar>\
-                         <account wname="{{AIC.wname}}" aname="{{AIC.aname}}">\
-                         </account>',
-              controller: 'AccountInfoCtrl as AIC'
-          })
-          .when('/wallets/:walletName/accounts/:accountName/transactions',{
-              template: '<navigation-bar></navigation-bar>\
-                         <transactions wname="{{TLC.wname}}"\
-                                       aname="{{TLC.aname}}">\
-                         </transactions>',
-              controller: 'TransactionListCtrl as TLC'
-          })
-          .when('/wallets/:walletName/accounts/:accountName/receive',{
-              template: '<navigation-bar></navigation-bar><addresses \
-                         wname="{{AdLC.wname}}" aname="{{AdLC.aname}}" \
-                         internal=false></addresses>',
-              controller: 'AddressListCtrl as AdLC'
-          })
-          .when('/wallets/:walletName/accounts/:accountName/change',{
-              template: '<navigation-bar></navigation-bar><addresses \
-                         wname="{{ChLC.wname}}" aname="{{ChLC.aname}}" \
-                         internal=true></addresses>',
-              controller: 'ChangeListCtrl as ChLC'
-          })
-          .when('/wallets/:walletName/accounts/:accountName/send',{
-              template: '<navigation-bar></navigation-bar>\
-                         <send-form wname="{{SFC.wname}}"\
-                                    aname="{{SFC.aname}}">\
-                         </send-form>',
-              controller: 'SendFormCtrl as SFC'
-          })
-          .when('/wallets/:walletName/accounts/:accountName/signTx',{
-              template: '<navigation-bar></navigation-bar>\
-                         <sign-tx-form wname="{{SiC.wname}}"\
-                                    aname="{{SiC.aname}}">\
-                         </sign-tx-form>',
-              controller: 'SignCtrl as SiC'
-          })
-          .when('/wallets/:walletName/accounts/:accountName/importTx',{
-              template: '<navigation-bar></navigation-bar>\
-                         <import-tx-form wname="{{ImC.wname}}"\
-                                    aname="{{ImC.aname}}">\
-                         </import-tx-form>',
-              controller: 'ImportCtrl as ImC'
-          })
-                
-
-          .otherwise({redirectTo: '/'});
-    }])
-    ////////////////////////////////////////////////////////////////////////////
-    // MAIN CONTROLLER
-    ////////////////////////////////////////////////////////////////////////////
-    .controller('WalletCtrl', ['$scope','$location','APIService',
-      function($scope, $location, APIService){
-        var self = this;
-    }])
-    ////////////////////////////////////////////////////////////////////////////
-    // ROUTES CONTROLLERS
-    ////////////////////////////////////////////////////////////////////////////
-    .controller('WalletListCtrl', ['walletsPromise',
-      function(walletsPromise){
-        var self = this;
-        self.wallets = walletsPromise;
-    }])
-    .controller('AccountListCtrl', ['accountsPromise','$routeParams',
-      function(accountsPromise,$routeParams){
-        var self = this;
-        self.wname = $routeParams.walletName;
-        self.accts = accountsPromise;
-    }])
-    .controller('AccountInfoCtrl', ['$routeParams',
-      function($routeParams){
-        var self = this;
-        self.wname = $routeParams.walletName;
-        self.aname = $routeParams.accountName;
-    }])
-    .controller('TransactionListCtrl', ['$routeParams',
-      function($routeParams){
-        var self = this;
-        self.wname = $routeParams.walletName;
-        self.aname = $routeParams.accountName;
-    }])
-    .controller('AddressListCtrl', ['$routeParams',
-      function($routeParams){
-        var self = this;
-        self.wname = $routeParams.walletName;
-        self.aname = $routeParams.accountName;
-    }])
-    .controller('ChangeListCtrl', ['$routeParams',
-      function($routeParams){
-        var self = this;
-        self.wname = $routeParams.walletName;
-        self.aname = $routeParams.accountName;
-    }])
-    .controller('SendFormCtrl', ['$routeParams',
-      function($routeParams){
-        var self = this;
-        self.wname = $routeParams.walletName;
-        self.aname = $routeParams.accountName;
-    }])
-    .controller('SignCtrl', ['$routeParams',
-      function($routeParams){
-        var self = this;
-        self.wname = $routeParams.walletName;
-        self.aname = $routeParams.accountName;
-    }])
-    .controller('ImportCtrl', ['$routeParams',
-      function($routeParams){
-        var self = this;
-        self.wname = $routeParams.walletName;
-        self.aname = $routeParams.accountName;
-    }])
-    ////////////////////////////////////////////////////////////////////////////
-    // SERVICES
-    ////////////////////////////////////////////////////////////////////////////
-
-    .factory('APIService', ['$resource', 
-      function($resource) {
-        return {
-          wallets:      $resource('/wallets/:wname', 
-                                  { wname:'@wname'}
-                        ),
-          accounts:     $resource('/wallets/:wname/accounts/:aname',
-                                  { wname:'@wname', aname:'@aname'}, 
-                                  { update: {method: 'PUT'} }
-                        ),
-          addKeys:      $resource('/wallets/:wname/accounts/:aname/keys',
-                                  { wname:'@wname', aname:'@aname'}                                   
-                        ),
-          accBalance:   $resource('/wallets/:wname/accounts/:aname/balance', 
-                                  { wname:'@wname', aname:'@aname'}
-                        ),
-          addresses:    $resource('/wallets/:wname/accounts/:aname/addrs', 
-                                  { wname:'@wname', aname:'@aname'}
-                        ),
-          address:      $resource('/wallets/:wname/accounts/:aname/addrs/:key', 
-                                  { wname:'@wname', aname:'@aname', key:'@key'},
-                                  { update: {method: 'PUT'}}
-                        ),
-          transactions: $resource('/wallets/:wname/accounts/:aname/txs', 
-                                  { wname:'@wname', aname:'@aname'}
-                        ),
-          node:         $resource('/node'),
-          transaction:  $resource('/wallets/:wname/accounts/:aname/txs/:txhash', 
-                                  { wname:'@wname'
-                                  , aname:'@aname'
-                                  , txhash:'@txhash'}
-                        )  
-          };
-    }])
-
-    ////////////////////////////////////////////////////////////////////////////
-    // FILTERS
-    ////////////////////////////////////////////////////////////////////////////
-    .filter('addrForQR', [
-        function() { 
-            return function(addr) {
-                return "bitcoin:" + addr;
-            };
-    }])
-    ////////////////////////////////////////////////////////////////////////////
-    // DIRECTIVES
+angular.module('HaskoinApp')
     ////////////////////////////////////////////////////////////////////////////
     .directive('ngEnter', function () {
         return function (scope, element, attrs) {
@@ -230,7 +12,7 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
             });
         };
     })
-
+    ////////////////////////////////////////////////////////////////////////////
     .directive('wallets', [function() {
         return {
             templateUrl: "scripts/views/wallets.html",
@@ -240,7 +22,7 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
             }
         };
     }])
-
+    ////////////////////////////////////////////////////////////////////////////
     .directive('accounts', [function() {
         return {
             templateUrl: "scripts/views/accounts.html",
@@ -251,7 +33,7 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
             }
         };
     }])
-
+    ////////////////////////////////////////////////////////////////////////////
     .directive('navigationBar', [ function() {
         return {
             templateUrl: "scripts/views/navigationBar.html",
@@ -288,11 +70,7 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
             scope: {}
         };
     }])
-
-    .controller('showKeyModalCtrl', ['$scope','xPubKey',
-       function($scope, xPubKey) { $scope.xPubKey = xPubKey;}
-    ])
-
+    ////////////////////////////////////////////////////////////////////////////
     .directive('account', [function() {
         return {
             templateUrl: "scripts/views/accountInfo.html",
@@ -333,7 +111,9 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                       title: 'Extended public key',
                       backdrop: true,
                       controller: 'showKeyModalCtrl',
-                      footerTemplate: '<button class="btn btn-primary" ng-click="$modalSuccess()">{{$modalSuccessLabel}}</button>',
+                      footerTemplate: '<button class="btn btn-primary" \
+                                       ng-click="$modalSuccess()"> \
+                                       {{$modalSuccessLabel}}</button>',
                       css: { top: '100px', left: '0%', margin: '0 auto'}
                     },
                     // parameters for the modal
@@ -352,10 +132,11 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
             }
         };
     }])
-
+    ////////////////////////////////////////////////////////////////////////////
     .directive('balance', [function() {
         return {
-            template: '<strong>{{balance.balance.balance / 100000.0 | number:5}} mBTC</strong>',
+            template: '<strong>{{balance.balance.balance/100000.0 | number:5}} \
+                       mBTC</strong>',
             restrict: 'E',
             controller: ['$scope',
                          'APIService',
@@ -381,59 +162,7 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
             }
         };
     }])
-
-    .controller('showTxDetailsModalCtrl', ['$scope'
-                                          ,'transaction'
-                                          ,'data'
-                                          ,'APIService'
-                                          ,'$route'
-       ,function($scope, transaction, data, APIService, $route) { 
-            $scope.transaction = transaction;
-            $scope.wallet = data.wallet;
-            $scope.account = data.account;
-            $scope.isProposition = data.isProposition;
-
-            $scope.alerts = [];
-            $scope.addAlert = function(t,m) {
-                $scope.alerts.push({type: t, msg: m});
-            };
-            $scope.closeAlert = function(index) {
-                $scope.alerts.splice(index, 1);
-            };
-            $scope.details = {};
-            $scope.details.type = "sign";
-            $scope.details.final = false;
-            $scope.details.tx = transaction.tx;
-
-            $scope.shellTx = APIService.transaction.get(
-                {
-                     wname:       $scope.wallet
-                    ,aname:       $scope.account
-                    ,txhash:      $scope.transaction.txid
-                    ,proposition: $scope.isProposition
-                }
-            );
-
-            $scope.submitSign = function () {            
-                var newTx = new APIService.transactions($scope.details);
-                newTx.$save({aname:$scope.account, wname:$scope.wallet},
-                        function (successResult) {
-                            $scope.alerts = [];
-                            $scope.addAlert('success', 'Transaction signed');
-                            $route.reload();                     
-                        },
-                        function (errorResult) {
-                            $scope.alerts = [];
-                            $scope.addAlert('danger', errorResult.data.errors);    
-                        }
-                );
-            };
-
-
-
-      }
-    ])
-
+    ////////////////////////////////////////////////////////////////////////////
     .directive('transactions', [function() {
         return {
             templateUrl: "scripts/views/transactions.html",
@@ -467,8 +196,8 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                                                     $scope.infoPage.maxpage;
                             },
                             function (errorResult) {
-                                // $scope.alerts = [];
-                                // $scope.addAlert('danger',errorResult.data.errors);
+                              // $scope.alerts = [];
+                              // $scope.addAlert('danger',errorResult.data.errors);
                             }
                         );
                     };
@@ -486,7 +215,9 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                       title: titleModal,
                       backdrop: true,
                       controller: 'showTxDetailsModalCtrl',
-                      footerTemplate: '<button class="btn btn-primary" ng-click="$modalSuccess()">{{$modalSuccessLabel}}</button>',
+                      footerTemplate: '<button class="btn btn-primary" \
+                                       ng-click="$modalSuccess()"> \
+                                       {{$modalSuccessLabel}}</button>',
                       css: { top: '100px', left: '0%', margin: '0 auto'}
                     },
                     // parameters for the modal
@@ -511,11 +242,7 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
             }
         };
     }])
-
-    .controller('showQRModalCtrl', ['$scope','address',
-       function($scope, address) { $scope.address = address;}
-    ])
-
+    ////////////////////////////////////////////////////////////////////////////
     .directive('addresses', [function() {
         return {
             templateUrl: "scripts/views/addresses.html",
@@ -546,8 +273,8 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                                                     $scope.infoPage.maxpage;
                             },
                             function (errorResult) {
-                                // $scope.alerts = [];
-                                // $scope.addAlert('danger',errorResult.data.errors);
+                              // $scope.alerts = [];
+                              // $scope.addAlert('danger',errorResult.data.errors);
                             }
                         );           
                     };
@@ -594,7 +321,9 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                       title: 'Bitcoin address',
                       backdrop: true,
                       controller: 'showQRModalCtrl',
-                      footerTemplate: '<button class="btn btn-primary" ng-click="$modalSuccess()">{{$modalSuccessLabel}}</button>',
+                      footerTemplate: '<button class="btn btn-primary" \
+                                       ng-click="$modalSuccess()"> \
+                                       {{$modalSuccessLabel}}</button>',
                       css: { top: '100px', left: '0%', margin: '0 auto'}
                     },
                     // parameters for the modal
@@ -615,7 +344,7 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
             }
         };
     }])
-
+    ////////////////////////////////////////////////////////////////////////////
     .directive('newWalletForm', [function() {
         return {
             templateUrl: "scripts/views/newWalletForm.html",
@@ -651,9 +380,7 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
             scope: {}
         };
     }])
-
-
-
+    ////////////////////////////////////////////////////////////////////////////
     .directive('newAccountForm', [function() {
         return {
             templateUrl: "scripts/views/newAccountForm.html",
@@ -712,15 +439,7 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
             scope: {}
         };
     }])
-
-    .controller('confirmPaymentModalCtrl', ['$scope','payment','data',
-       function($scope, payment, data) {
-        $scope.payment = payment;
-        $scope.wallet = data.wallet;
-        $scope.account = data.account;
-        $scope.isMultisig = data.multisig;
-    }])
-
+    ////////////////////////////////////////////////////////////////////////////
     .directive('sendForm', [function() {
         return {
             templateUrl: "scripts/views/sendForm.html",
@@ -750,7 +469,8 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                     else {return false;};
                 };
 
-                $scope.account = $scope.getAccountDetails($scope.aname,$scope.wname);
+                $scope.account = $scope.getAccountDetails(
+                                        $scope.aname,$scope.wname);
                 $scope.payment = {};
                 $scope.payment.type = "send";
                 $scope.payment.recipients = [];
@@ -760,7 +480,8 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
      
                 $scope.submitNewPayment = function () {
                     $scope.payment.recipients = [];
-                    $scope.payment.recipients.push([$scope.r,$scope.a*100000]); //amout submited in satoshi
+                    //amout submited in satoshi
+                    $scope.payment.recipients.push([$scope.r,$scope.a*100000]); 
                     var newpayment = new APIService.transactions($scope.payment);
                     newpayment.$save({aname:$scope.aname, wname:$scope.wname},
                                     function (successResult) {
@@ -782,7 +503,8 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                     if (!ms) {modalTitle = "Payment confirmation";} 
                     else {modalTitle = "Proposotion confirmation";};
                     $scope.payment.recipients = [];
-                    $scope.payment.recipients.push([$scope.r,$scope.a]);  //amout showed in mBTC
+                    //amout showed in mBTC
+                    $scope.payment.recipients.push([$scope.r,$scope.a]);  
                     createDialog('scripts/views/modals/sendConfirm.html', {
                       id: 'sendConfirmation',
                       title: modalTitle,
@@ -816,7 +538,7 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
             }
         };
     }])
-
+    ////////////////////////////////////////////////////////////////////////////
     .directive('importTxForm', [function() {
         return {
             templateUrl: "scripts/views/importTxForm.html",
@@ -856,7 +578,7 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
             }
         };
     }])
-
+    ////////////////////////////////////////////////////////////////////////////
     .directive('signTxForm', [function() {
         return {
             templateUrl: "scripts/views/signTxForm.html",
@@ -878,28 +600,28 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                     
                     var newTx = new APIService.transactions($scope.details);
                     newTx.$save({aname:$scope.aname, wname:$scope.wname},
-                                    function (successResult) {
-                                        $scope.signedTx = APIService.transaction.get(
-                                            {
-                                                 wname:       $scope.wname
-                                                ,aname:       $scope.aname
-                                                ,txhash:      $scope.newTx.txhash
-                                            },
-                                            function (successResult) {
-                                                $scope.alerts = [];
-                                                $scope.addAlert('success',signedTx.tx);
-                                            },
-                                            function (errorResult) {
-                                                $scope.alerts = [];
-                                                $scope.addAlert('danger',errorResult.data.errors);
-                                            }
-                                        );
-                                    },
-                                    function (errorResult) {
-                                        $scope.alerts = [];
-                                        $scope.addAlert('danger',
-                                            errorResult.data.errors);    
-                                    }
+                        function (successResult) {
+                            $scope.signedTx = APIService.transaction.get(
+                                {
+                                     wname:       $scope.wname
+                                    ,aname:       $scope.aname
+                                    ,txhash:      $scope.newTx.txhash
+                                },
+                                function (successResult) {
+                                    $scope.alerts = [];
+                                    $scope.addAlert('success',signedTx.tx);
+                                },
+                                function (errorResult) {
+                                    $scope.alerts = [];
+                                    $scope.addAlert('danger',errorResult.data.errors);
+                                }
+                            );
+                        },
+                        function (errorResult) {
+                            $scope.alerts = [];
+                            $scope.addAlert('danger',
+                                errorResult.data.errors);    
+                        }
                     );
                 };
             }],
@@ -909,8 +631,8 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
             }
         };
     }])
-
-.directive('rescanForm', [function() {
+    ////////////////////////////////////////////////////////////////////////////
+    .directive('rescanForm', [function() {
         return {
             templateUrl: "scripts/views/rescanForm.html",
             restrict: 'E',
@@ -970,8 +692,7 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
             scope: {}
         };
     }])
-
-
+    ////////////////////////////////////////////////////////////////////////////
     .directive('addKeysForm', [function() {
         return {
             templateUrl: "scripts/views/addKeys.html",
