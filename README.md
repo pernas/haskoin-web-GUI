@@ -74,3 +74,10 @@ Open your browser
 ```
 http://localhost:18555/static/index.html
 ```
+
+## TODO
+
+- manage the API response messages better
+- write a service for ALERT messages
+- write the testing with (karma/jasmine)
+
