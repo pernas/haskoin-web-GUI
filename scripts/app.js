@@ -2,7 +2,8 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                              ,'ngResource'
                              ,'ui.bootstrap'
                              ,'ngRoute'
-                             ,'fundoo.services'])
+                             ,'fundoo.services'
+                             ,'passwordStr'])
     ////////////////////////////////////////////////////////////////////////////
     // CONFIG ROUTES
     ////////////////////////////////////////////////////////////////////////////
@@ -10,9 +11,14 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
       function($routeProvider) {
         $routeProvider
           .when('/',{
-              redirectTo: '/wallets'
-              // template: '<navigation-bar></navigation-bar>\
-              //            <h2>Welcome to Haskoin wallet</h2>'
+              //redirectTo: '/wallets'
+              template: '<navigation-bar></navigation-bar> \
+                         <label for="pwd">Password</label> \
+                         <input id="pwd" \
+                                class="form-control" \
+                                type="text" \
+                                ng-model="wctrl.pwd"></input>\
+                         <div password-str password="{{wctrl.pwd}}"></div>'
           })
           .when('/new-wallet',{
               template: '<navigation-bar></navigation-bar>\
@@ -108,6 +114,7 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
     .controller('WalletCtrl', ['$scope','$location','APIService',
       function($scope, $location, APIService){
         var self = this;
+        self.pwd = "";
     }])
     ////////////////////////////////////////////////////////////////////////////
     // ROUTES CONTROLLERS
