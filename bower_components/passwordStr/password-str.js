@@ -1,40 +1,88 @@
 'use strict';
 
-angular.module('passwordStr', []);
-
-angular.module('passwordStr', []).
-    directive('passwordStr', function () {
+angular.module('passwordEntropy', [])
+////////////////////////////////////////////////////////////////////////////////
+// entropy bar meter directive
+    .directive('passwordEntropy', ['EntropyService', function (EntropyService) {
         return {
-            restrict: 'A',
-            template: '<div class="progress">\
+            restrict: 'E',
+            template: '<div ng-show="password" class="progress"> \
                          <div class="progress-bar {{colorBar}}" \
                               role="progressbar" \
-                              aria-valuenow="60" \
                               aria-valuemin="0" \
                               aria-valuemax="100" \
                               style="width: {{entropy(password)}}%;"> \
-                                       {{veredict(H)}} \
+                           {{veredict(password)}} \
                          </div>\
                         </div>',
             controller: ['$scope',
               function($scope){
+
                 $scope.colorBar = "progress-bar-danger";
-                $scope.H = 0;
+                $scope.veredict = function(pass){
+                    var H = EntropyService.entropy(pass);
+                    var message = "";
+                    for(var key in $scope.options) {
+                      if($scope.options.hasOwnProperty(key)) {
+                        if (H > key) {
+                          $scope.colorBar = $scope.options[key][0];
+                          message = $scope.options[key][1];
+                        }
+                      }
+                    }
+                    return message;
+                };
+                $scope.entropy = EntropyService.entropy;
+              }
+            ],
+            scope: {
+                 password: '=',
+                 options: '='
+            }
+        };
 
-                var hasLowerCase = function (str){
-                    return (/[a-z]/.test(str));
-                }
-                var hasUpperCase = function (str){
-                    return (/[A-Z]/.test(str));
-                }
-                var hasNumbers = function (str){
-                    return (/[0-9]/.test(str));
-                }
-                var hasPunctuation = function (str){
-                    return (/[-!$%^&*()_+|~=`{}\[\]:";'<>?,.\/]/.test(str));
-                }
+}])
+////////////////////////////////////////////////////////////////////////////////
+// validation rule
+  .directive('minEntropy', ['EntropyService', function (EntropyService){
+      return{
+        require:'ngModel',
+        link: function(scope, elem, attrs, ctrl){
+          ctrl.$parsers.unshift(checkForEven);
 
-                $scope.entropy = function(pass) {
+          function checkForEven(viewValue){
+            var minimumEntropy = parseFloat(attrs.minEntropy);
+            var H = EntropyService.entropy(viewValue);
+            if (H > minimumEntropy) {
+              ctrl.$setValidity('minEntropy',true);
+            }
+            else{
+              ctrl.$setValidity('minEntropy', false);
+            }
+            return viewValue;
+          }
+        }
+      };
+}])
+////////////////////////////////////////////////////////////////////////////////
+// Entropy Service 
+  .factory('EntropyService', function () {
+    var hasLowerCase = function (str){
+        return (/[a-z]/.test(str));
+    };
+    var hasUpperCase = function (str){
+        return (/[A-Z]/.test(str));
+    };
+    var hasNumbers = function (str){
+        return (/[0-9]/.test(str));
+    };
+    var hasPunctuation = function (str){
+        return (/[-!$%^&*()_+|~=`{}\[\]:";'<>?,.\/]/.test(str));
+    };
+    return {
+        entropy: function(pass) {
+                var H = 0;
+                if(pass) {
                   var base = 0;
                   if (hasLowerCase(pass)) {
                     base += 26;
@@ -48,46 +96,12 @@ angular.module('passwordStr', []).
                   if (hasPunctuation(pass)) {
                     base += 30;
                   }
-                  $scope.H = Math.log2(Math.pow(base, pass.length));
-                  if ($scope.H > 100) {$scope.H = 100};
-                  return $scope.H;         
-                };
 
-                $scope.veredict = function(H) {
-                    var message = "Weak";
-                    switch (true) {
-                        case (H <= 20):
-                            var message = "Very weak";
-                            $scope.colorBar = "progress-bar-danger"
-                            break;
-                        case (H > 20 && H <= 40):
-                            var message = "Weak";
-                            $scope.colorBar = "progress-bar-danger"
-                            break;
-                        case (H > 40 && H <= 60):
-                            var message = "Medium";
-                            $scope.colorBar = "progress-bar-info"
-                            break;
-                        case (H > 60 && H <= 80):
-                            var message = "Strong";
-                            $scope.colorBar = "progress-bar-success"
-                            break;
-                        case (H > 80):
-                            var message = "Very strong";
-                            $scope.colorBar = "progress-bar-success"
-                            break;
-                        default:
-                            var message = "Impossible";
-                            $scope.colorBar = "progress-bar-danger"
-                            break;
-                    }
-                    return message;        
-                };
-              }
-            ],
-            scope: {
-                 password: '@',
-            }
-        };
-
-    });
+                  var H = Math.log2(Math.pow(base, pass.length));
+                  //fit to max entropy
+                  if (H > 100) {H = 100};
+                }
+                return H;         
+        }
+    };
+});  

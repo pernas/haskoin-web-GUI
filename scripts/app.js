@@ -3,7 +3,7 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                              ,'ui.bootstrap'
                              ,'ngRoute'
                              ,'fundoo.services'
-                             ,'passwordStr'])
+                             ,'passwordEntropy'])
     ////////////////////////////////////////////////////////////////////////////
     // CONFIG ROUTES
     ////////////////////////////////////////////////////////////////////////////
@@ -13,12 +13,32 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
           .when('/',{
               //redirectTo: '/wallets'
               template: '<navigation-bar></navigation-bar> \
-                         <label for="pwd">Password</label> \
-                         <input id="pwd" \
-                                class="form-control" \
-                                type="text" \
-                                ng-model="wctrl.pwd"></input>\
-                         <div password-str password="{{wctrl.pwd}}"></div>'
+                         <form role="form" \
+                               name="test" \
+                               ng-submit="wctrl.testSubmit()"> \
+                                <div class="form-group"> \
+                                  <label for="pwd">Password: </label> \
+                                  <input id="pwd" \
+                                         name="passwordInput" \
+                                         class="form-control" \
+                                         type="text" \
+                                         ng-model="wctrl.pwd" \
+                                         min-entropy="75" \
+                                         required ></input> \
+                                  <password-entropy \
+                                    password="wctrl.pwd" \
+                                    options="wctrl.myOpt" \
+                                    > \
+                                  </password-entropy> \
+                                </div> \
+                                <div class="form-group"> \
+                                  <button type="submit" \
+                                          class="btn btn-default" \
+                                          ng-disabled="test.$invalid"> \
+                                          Say hello \
+                                  </button> \
+                                </div> \
+                        </form>'
           })
           .when('/new-wallet',{
               template: '<navigation-bar></navigation-bar>\
@@ -115,6 +135,13 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
       function($scope, $location, APIService){
         var self = this;
         self.pwd = "";
+        self.testSubmit = function() {alert("Hola!!");};
+        self.myOpt = {
+                     '0': ['progress-bar-danger',  'very weak'],
+                    '15': ['progress-bar-danger',  'weak'],
+                    '50': ['progress-bar-success', 'strong'],
+                    '70': ['progress-bar-success', 'very strong']
+        }; 
     }])
     ////////////////////////////////////////////////////////////////////////////
     // ROUTES CONTROLLERS
