@@ -139,6 +139,7 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
         self.myOpt = {
                      '0': ['progress-bar-danger',  'very weak'],
                     '15': ['progress-bar-danger',  'weak'],
+                    '35': ['progress-bar-warning',  'normal'],
                     '50': ['progress-bar-success', 'strong'],
                     '70': ['progress-bar-success', 'very strong']
         }; 
