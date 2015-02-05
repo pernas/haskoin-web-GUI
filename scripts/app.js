@@ -23,7 +23,7 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                                          class="form-control" \
                                          type="text" \
                                          ng-model="wctrl.pwd" \
-                                         min-entropy="75" \
+                                         min-entropy="50" \
                                          required ></input> \
                                   <password-entropy \
                                     password="wctrl.pwd" \
