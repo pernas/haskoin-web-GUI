@@ -27,7 +27,6 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
                                          required ></input> \
                                   <password-entropy \
                                     password="wctrl.pwd" \
-                                    options="wctrl.myOpt" \
                                     > \
                                   </password-entropy> \
                                 </div> \
