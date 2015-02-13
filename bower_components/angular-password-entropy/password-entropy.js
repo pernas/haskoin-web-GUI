@@ -1,5 +1,9 @@
 'use strict';
 
+Math.log2 = Math.log2 || function(x) {
+  return Math.log(x) / Math.LN2;
+};
+
 angular.module('passwordEntropy', [])
 ////////////////////////////////////////////////////////////////////////////////
 // entropy bar meter directive
@@ -8,12 +12,13 @@ angular.module('passwordEntropy', [])
             restrict: 'E',
             template: '<div ng-show="password" class="progress"> \
                          <div class="progress-bar" \
-                              ng-class="colorBar" \
+                              ng-class=colorBar \
                               role="progressbar" \
+                              aria-valuenow="{{H}}"" \
                               aria-valuemin="0" \
                               aria-valuemax="100" \
-                              style="width: {{H}}%;"> \
-                           {{veredict(H)}} test \
+                              ng-style="{width: H + \'%\'}" > \
+                           {{veredict(H)}}\
                          </div>\
                         </div>',
             controller: ['$scope',

@@ -1,6 +1,6 @@
 {
   "name": "angular-password-entropy",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "homepage": "https://github.com/pernas/angular-password-entropy",
   "authors": [
     "Jaume Pernas <jaume@pernas.cat>"
@@ -24,11 +24,11 @@
   "dependencies": {
     "angular": ">=1.2.0"
   },
-  "_release": "0.0.5",
+  "_release": "0.0.6",
   "_resolution": {
     "type": "version",
-    "tag": "v0.0.5",
-    "commit": "a2119c4680d4386a529244393914084f2efaf3c0"
+    "tag": "v0.0.6",
+    "commit": "eba1dbbf79f3b88333eb4a820bb5110abb0bebaa"
   },
   "_source": "git://github.com/pernas/angular-password-entropy.git",
   "_target": "*",
