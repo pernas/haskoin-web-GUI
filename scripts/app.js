@@ -11,7 +11,7 @@ angular.module('HaskoinApp', ['monospaced.qrcode'
       function($routeProvider) {
         $routeProvider
           .when('/',{
-              redirectTo: '/wallets'
+              redirectTo: '/wallets',
               template: '<navigation-bar></navigation-bar> \
                          <form role="form" \
                                name="test" \
